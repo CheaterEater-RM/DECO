@@ -12,4 +12,6 @@
   <PH_UseButtonOrLeverDesc>Toggle this control and make all linked doors match its state.</PH_UseButtonOrLeverDesc>
   <PH_UseButtonOrLeverNoConnection>No linked remote doors.</PH_UseButtonOrLeverNoConnection>
   <PH_UseButtonOrLeverNoPower>Requires power.</PH_UseButtonOrLeverNoPower>
+  <PH_RenameButton>Rename</PH_RenameButton>
+  <PH_RenameButtonDesc>Give this button or lever a custom name so you can tell your remote controls apart.</PH_RenameButtonDesc>
 </LanguageData>

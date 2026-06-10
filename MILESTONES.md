@@ -135,10 +135,10 @@ Dependencies: M2 remote doors validated.
 ### User Todos:
 - linked tribal curtains so that they move in sync when opposite one another
 - jail cell doors are not passable by prisoners, and they allow firing through (with extra unlock time)
-- Stop forbidding doors with secure remotely button (is this necessary?)
+- Stop forbidding doors with secure remotely button (is this necessary?) (complete, no forbidding with DECO)
 - Ensure that if we use a "build remote" from a door, it gets linked automatically
-- Allow labelling remote switches
-- Add clearer lines for remote switches to doors
+- Allow labelling remote switches (completed)
+- Add clearer lines for remote switches to doors (completed)
 - Check containment with Anomaly
 - Ensure that creatures and anything else can't get through
 - Allow Rimworld security door to use buttons

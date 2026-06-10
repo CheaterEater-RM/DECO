@@ -5,12 +5,26 @@ using Verse.Sound;
 
 namespace DoorsExpanded
 {
-    public class Building_DoorRemoteButton : Building
+    public class Building_DoorRemoteButton : Building, IRenameable
     {
         private List<Building_DoorRemote> linkedDoors = new();
         private CompPowerTrader powerComp;
         private bool buttonOn;
         private bool needsToBeSwitched;
+        private string customLabel;
+
+        public string RenamableLabel
+        {
+            get => customLabel.NullOrEmpty() ? BaseLabel : customLabel;
+            set => customLabel = value == BaseLabel ? null : value;
+        }
+
+        public string BaseLabel => base.LabelNoCount.CapitalizeFirst();
+
+        public string InspectLabel => LabelCap;
+
+        public override string LabelNoCount =>
+            customLabel.NullOrEmpty() ? base.LabelNoCount : customLabel;
 
         public List<Building_DoorRemote> LinkedDoors
         {
@@ -61,6 +75,7 @@ namespace DoorsExpanded
             Scribe_Collections.Look(ref linkedDoors, "linkedDoors", LookMode.Reference);
             Scribe_Values.Look(ref buttonOn, "buttonOn", false);
             Scribe_Values.Look(ref needsToBeSwitched, "needsToBeSwitched", false);
+            Scribe_Values.Look(ref customLabel, "customLabel");
             linkedDoors ??= new List<Building_DoorRemote>();
         }
 
@@ -68,7 +83,7 @@ namespace DoorsExpanded
         {
             base.DrawExtraSelectionOverlays();
             foreach (var linkedDoor in LinkedDoors)
-                GenDraw.DrawLineBetween(DrawPos, linkedDoor.DrawPos);
+                RemoteLinkDraw.DrawLink(DrawPos, linkedDoor.DrawPos);
         }
 
         public override IEnumerable<Gizmo> GetGizmos()
@@ -87,6 +102,14 @@ namespace DoorsExpanded
             if (IsDisabled(out var reason))
                 toggle.Disable(reason);
             yield return toggle;
+
+            yield return new Command_Action
+            {
+                defaultLabel = "PH_RenameButton".Translate(),
+                defaultDesc = "PH_RenameButtonDesc".Translate(),
+                icon = RemoteControlTex.Rename,
+                action = () => Find.WindowStack.Add(new Dialog_RenameRemoteButton(this))
+            };
         }
 
         public void Notify_Linked(Building_DoorRemote door)

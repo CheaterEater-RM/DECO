@@ -100,7 +100,7 @@ namespace DoorsExpanded
         {
             base.DrawExtraSelectionOverlays();
             if (button != null)
-                GenDraw.DrawLineBetween(DrawPos, button.DrawPos);
+                RemoteLinkDraw.DrawLink(button.DrawPos, DrawPos);
         }
 
         public override IEnumerable<Gizmo> GetGizmos()

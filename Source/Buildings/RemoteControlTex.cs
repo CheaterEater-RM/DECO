@@ -18,6 +18,9 @@ namespace DoorsExpanded
         public static readonly Texture2D DisconnectButton =
             ContentFinder<Texture2D>.Get("UI/DEx/Buttons/DisconnectButton");
 
+        public static readonly Texture2D Rename =
+            ContentFinder<Texture2D>.Get("UI/Buttons/Rename");
+
         public static readonly Material SecuredOverlayMaterial =
             MaterialPool.MatFrom("UI/DEx/Overlays/DE_Secured", ShaderDatabase.Transparent);
     }
