@@ -8,7 +8,7 @@ This is not a migration path from the old mod. Remove the old mod and rebuild do
 
 ## Attribution
 
-Original Doors Expanded assets are reused under the MIT license with attribution to jecrell, lbmaian, jebjordan, and the original commissioned art credit noted in the rewrite design.
+Textures and audio are reused from *Doors Expanded* (© 2020 jecrell, MIT) with attribution to jecrell, lbmaian, and jebjordan. Original art commissioned by CMDR Toss Antilles. The DECO codebase is a clean-room rewrite and does not reuse the original mod's code.
 
 ## License
 

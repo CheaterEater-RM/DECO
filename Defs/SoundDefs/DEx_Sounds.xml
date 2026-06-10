@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <!-- Audio reused from Doors Expanded (jecrell, MIT). See LICENSE / About.xml. -->
+
+  <SoundDef>
+    <defName>DEx_GarageOpen</defName>
+    <context>MapOnly</context>
+    <maxSimultaneous>1</maxSimultaneous>
+    <subSounds>
+      <li>
+        <grains>
+          <li Class="AudioGrain_Clip">
+            <clipPath>DEx/RemoteDoor/GarageOpen</clipPath>
+          </li>
+        </grains>
+        <volumeRange>3</volumeRange>
+        <pitchRange>0.85~1.15</pitchRange>
+      </li>
+    </subSounds>
+  </SoundDef>
+
+  <SoundDef>
+    <defName>DEx_GarageClose</defName>
+    <context>MapOnly</context>
+    <maxSimultaneous>1</maxSimultaneous>
+    <subSounds>
+      <li>
+        <grains>
+          <li Class="AudioGrain_Clip">
+            <clipPath>DEx/RemoteDoor/GarageClose</clipPath>
+          </li>
+        </grains>
+        <volumeRange>3</volumeRange>
+        <pitchRange>0.85~1.15</pitchRange>
+      </li>
+    </subSounds>
+  </SoundDef>
+
+  <SoundDef>
+    <defName>DEx_CurtainOpen</defName>
+    <context>MapOnly</context>
+    <maxSimultaneous>1</maxSimultaneous>
+    <subSounds>
+      <li>
+        <grains>
+          <li Class="AudioGrain_Clip">
+            <clipPath>DEx/Curtain/CurtainOpen</clipPath>
+          </li>
+        </grains>
+        <volumeRange>3</volumeRange>
+        <pitchRange>0.85~1.15</pitchRange>
+      </li>
+    </subSounds>
+  </SoundDef>
+
+  <SoundDef>
+    <defName>DEx_CurtainClose</defName>
+    <context>MapOnly</context>
+    <maxSimultaneous>1</maxSimultaneous>
+    <subSounds>
+      <li>
+        <grains>
+          <li Class="AudioGrain_Clip">
+            <clipPath>DEx/Curtain/CurtainClose</clipPath>
+          </li>
+        </grains>
+        <volumeRange>3</volumeRange>
+        <pitchRange>0.85~1.15</pitchRange>
+      </li>
+    </subSounds>
+  </SoundDef>
+
+  <SoundDef>
+    <defName>DEx_JailDoorOpen</defName>
+    <context>MapOnly</context>
+    <maxSimultaneous>1</maxSimultaneous>
+    <subSounds>
+      <li>
+        <grains>
+          <li Class="AudioGrain_Clip">
+            <clipPath>DEx/JailDoor/JailDoorOpen</clipPath>
+          </li>
+        </grains>
+        <volumeRange>3</volumeRange>
+        <pitchRange>0.85~1.15</pitchRange>
+      </li>
+    </subSounds>
+  </SoundDef>
+
+  <SoundDef>
+    <defName>DEx_JailDoorClose</defName>
+    <context>MapOnly</context>
+    <maxSimultaneous>1</maxSimultaneous>
+    <subSounds>
+      <li>
+        <grains>
+          <li Class="AudioGrain_Clip">
+            <clipPath>DEx/JailDoor/JailDoorClose</clipPath>
+          </li>
+        </grains>
+        <volumeRange>3</volumeRange>
+        <pitchRange>0.85~1.15</pitchRange>
+      </li>
+    </subSounds>
+  </SoundDef>
+
+  <SoundDef>
+    <defName>DEx_BlastDoorOpen</defName>
+    <context>MapOnly</context>
+    <maxSimultaneous>1</maxSimultaneous>
+    <subSounds>
+      <li>
+        <grains>
+          <li Class="AudioGrain_Clip">
+            <clipPath>DEx/BlastDoor/BlastDoorOpen</clipPath>
+          </li>
+        </grains>
+        <volumeRange>3</volumeRange>
+        <pitchRange>0.85~1.15</pitchRange>
+      </li>
+    </subSounds>
+  </SoundDef>
+
+  <SoundDef>
+    <defName>DEx_BlastDoorClose</defName>
+    <context>MapOnly</context>
+    <maxSimultaneous>1</maxSimultaneous>
+    <subSounds>
+      <li>
+        <grains>
+          <li Class="AudioGrain_Clip">
+            <clipPath>DEx/BlastDoor/BlastDoorClose</clipPath>
+          </li>
+        </grains>
+        <volumeRange>3</volumeRange>
+        <pitchRange>0.85~1.15</pitchRange>
+      </li>
+    </subSounds>
+  </SoundDef>
+
+</Defs>

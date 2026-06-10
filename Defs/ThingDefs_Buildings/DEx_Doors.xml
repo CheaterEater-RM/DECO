@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <!--
+  ============================ DECO door catalogue ============================
+  Art reused from Doors Expanded (jecrell, MIT).
+
+  1x1 doors  : vanilla Building_Door, pure XML.
+  Multi-tile : DECO.Building_DoorExpanded (Building_MultiTileDoor subclass) with a
+               custom full-width slide draw, because the reused _Mover art is authored
+               at full door width and vanilla's half-width two-leaf draw breaks it.
+
+  Research folded into vanilla:
+    - curtains, large doors : none (start of game)
+    - jail door, gate       : Smithing
+    - blast doors           : Machining
+    - remote/garage doors   : Microelectronics  (M2 - not yet)
+  -->
+
+  <!-- ================= Large doors ================= -->
+
+  <ThingDef ParentName="DExMultiDoorBase">
+    <defName>DEx_DoorDouble</defName>
+    <label>door (2x1)</label>
+    <description>Divides rooms. A wide manually-operated door spanning two tiles. Requires adjacent walls to function.</description>
+    <size>(2,1)</size>
+    <statBases>
+      <WorkToBuild>1700</WorkToBuild>
+      <MaxHitPoints>320</MaxHitPoints>
+    </statBases>
+    <costStuffCount>50</costStuffCount>
+    <graphicData>
+      <texPath>Things/Building/DEx/Door/DoorDouble_Mover</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(2,1)</drawSize>
+      <damageData>
+        <enabled>false</enabled>
+      </damageData>
+    </graphicData>
+    <uiIconPath>Things/Building/DEx/Door/DoorDouble_MenuIcon</uiIconPath>
+    <building>
+      <isStuffableAirtight>true</isStuffableAirtight>
+      <blueprintGraphicData>
+        <texPath>Things/Building/DEx/Door/DoorDouble_Blueprint</texPath>
+        <graphicClass>Graphic_Single</graphicClass>
+        <drawSize>(2,1)</drawSize>
+      </blueprintGraphicData>
+    </building>
+    <comps>
+      <li Class="DECO.CompProperties_DoorExpanded">
+        <doorType>Standard</doorType>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <ThingDef ParentName="DExMultiDoorBase">
+    <defName>DEx_DoorTriple</defName>
+    <label>door (3x1)</label>
+    <description>Divides rooms. A wide manually-operated door spanning three tiles. Requires adjacent walls to function.</description>
+    <size>(3,1)</size>
+    <statBases>
+      <WorkToBuild>2550</WorkToBuild>
+      <MaxHitPoints>480</MaxHitPoints>
+    </statBases>
+    <costStuffCount>75</costStuffCount>
+    <graphicData>
+      <texPath>Things/Building/DEx/Door/DoorTriple_Mover</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(3,1)</drawSize>
+      <damageData>
+        <enabled>false</enabled>
+      </damageData>
+    </graphicData>
+    <uiIconPath>Things/Building/DEx/Door/DoorTriple_MenuIcon</uiIconPath>
+    <building>
+      <isStuffableAirtight>true</isStuffableAirtight>
+      <blueprintGraphicData>
+        <texPath>Things/Building/DEx/Door/DoorTriple_Blueprint</texPath>
+        <graphicClass>Graphic_Single</graphicClass>
+        <drawSize>(3,1)</drawSize>
+      </blueprintGraphicData>
+    </building>
+    <comps>
+      <li Class="DECO.CompProperties_DoorExpanded">
+        <doorType>Standard</doorType>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <!-- ================= Curtains (cloth, no research, NOT minifiable - they're doors) ================= -->
+
+  <ThingDef ParentName="DExDoorBase">
+    <defName>DEx_CurtainTribal</defName>
+    <label>curtain</label>
+    <description>Divides rooms. Curtains open much faster than standard doors, but are flammable and offer no airtight seal.</description>
+    <!-- Expanded class for the Stretch animation: a single sheet that bunches to one side.
+         Vanilla Building_Door would draw the full-width sheet twice, sliding apart. -->
+    <thingClass>DECO.Building_DoorExpanded</thingClass>
+    <size>(1,1)</size>
+    <rotatable>false</rotatable>
+    <statBases>
+      <WorkToBuild>850</WorkToBuild>
+      <MaxHitPoints>50</MaxHitPoints>
+      <DoorOpenSpeed>4.0</DoorOpenSpeed>
+      <Beauty>1</Beauty>
+      <Flammability>1.0</Flammability>
+    </statBases>
+    <costStuffCount>25</costStuffCount>
+    <stuffCategories Inherit="False">
+      <li>Fabric</li>
+      <li>Leathery</li>
+    </stuffCategories>
+    <graphicData>
+      <texPath>Things/Building/DEx/Door/Curtain_Mover</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(1,1)</drawSize>
+      <damageData>
+        <enabled>false</enabled>
+      </damageData>
+    </graphicData>
+    <uiIconPath>Things/Building/DEx/Door/Curtain_Mover</uiIconPath>
+    <building>
+      <isStuffableAirtight>false</isStuffableAirtight>
+      <roamerCanOpen>true</roamerCanOpen>
+      <soundDoorOpenManual>DEx_CurtainOpen</soundDoorOpenManual>
+      <soundDoorCloseManual>DEx_CurtainClose</soundDoorCloseManual>
+      <alwaysExchangeVacuum>true</alwaysExchangeVacuum>
+    </building>
+    <comps>
+      <li Class="DECO.CompProperties_DoorExpanded">
+        <doorType>Stretch</doorType>
+        <singleDoor>true</singleDoor>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <ThingDef ParentName="DExMultiDoorBase">
+    <defName>DEx_CurtainDouble</defName>
+    <label>curtain (2x1)</label>
+    <description>Divides rooms. A wide curtain spanning two tiles. Opens much faster than standard doors, but is flammable and offers no airtight seal.</description>
+    <size>(2,1)</size>
+    <statBases>
+      <WorkToBuild>1700</WorkToBuild>
+      <MaxHitPoints>100</MaxHitPoints>
+      <DoorOpenSpeed>4.0</DoorOpenSpeed>
+      <Beauty>2</Beauty>
+      <Flammability>1.0</Flammability>
+    </statBases>
+    <costStuffCount>50</costStuffCount>
+    <stuffCategories Inherit="False">
+      <li>Fabric</li>
+      <li>Leathery</li>
+    </stuffCategories>
+    <graphicData>
+      <texPath>Things/Building/DEx/Door/CurtainDouble_Mover</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(2,1)</drawSize>
+      <damageData>
+        <enabled>false</enabled>
+      </damageData>
+    </graphicData>
+    <uiIconPath>Things/Building/DEx/Door/CurtainDouble_Mover</uiIconPath>
+    <building>
+      <roamerCanOpen>true</roamerCanOpen>
+      <soundDoorOpenManual>DEx_CurtainOpen</soundDoorOpenManual>
+      <soundDoorCloseManual>DEx_CurtainClose</soundDoorCloseManual>
+      <alwaysExchangeVacuum>true</alwaysExchangeVacuum>
+      <blueprintGraphicData>
+        <texPath>Things/Building/DEx/Door/CurtainDouble_Mover</texPath>
+        <graphicClass>Graphic_Single</graphicClass>
+        <drawSize>(2,1)</drawSize>
+      </blueprintGraphicData>
+    </building>
+    <comps>
+      <li Class="DECO.CompProperties_DoorExpanded">
+        <doorType>Stretch</doorType>
+        <singleDoor>true</singleDoor>
+        <stretchOpenSize>(0.2,1)</stretchOpenSize> <!-- shrink to same size as shrunken 1x1 curtain -->
+      </li>
+    </comps>
+  </ThingDef>
+
+  <ThingDef ParentName="DExMultiDoorBase">
+    <defName>DEx_CurtainTriple</defName>
+    <label>curtain (3x1)</label>
+    <description>Divides rooms. A wide curtain spanning three tiles. Opens much faster than standard doors, but is flammable and offers no airtight seal.</description>
+    <size>(3,1)</size>
+    <statBases>
+      <WorkToBuild>2550</WorkToBuild>
+      <MaxHitPoints>150</MaxHitPoints>
+      <DoorOpenSpeed>4.0</DoorOpenSpeed>
+      <Beauty>3</Beauty>
+      <Flammability>1.0</Flammability>
+    </statBases>
+    <costStuffCount>75</costStuffCount>
+    <stuffCategories Inherit="False">
+      <li>Fabric</li>
+      <li>Leathery</li>
+    </stuffCategories>
+    <graphicData>
+      <texPath>Things/Building/DEx/Door/CurtainTriple_Mover</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(3,1)</drawSize>
+      <damageData>
+        <enabled>false</enabled>
+      </damageData>
+    </graphicData>
+    <uiIconPath>Things/Building/DEx/Door/CurtainTriple_Mover</uiIconPath>
+    <building>
+      <roamerCanOpen>true</roamerCanOpen>
+      <soundDoorOpenManual>DEx_CurtainOpen</soundDoorOpenManual>
+      <soundDoorCloseManual>DEx_CurtainClose</soundDoorCloseManual>
+      <alwaysExchangeVacuum>true</alwaysExchangeVacuum>
+      <blueprintGraphicData>
+        <texPath>Things/Building/DEx/Door/CurtainTriple_Mover</texPath>
+        <graphicClass>Graphic_Single</graphicClass>
+        <drawSize>(3,1)</drawSize>
+      </blueprintGraphicData>
+    </building>
+    <comps>
+      <li Class="DECO.CompProperties_DoorExpanded">
+        <doorType>Stretch</doorType>
+        <singleDoor>true</singleDoor>
+        <stretchOpenSize>(0.2,1)</stretchOpenSize> <!-- shrink to same size as shrunken 1x1 curtain -->
+      </li>
+    </comps>
+  </ThingDef>
+
+  <!-- ================= Jail door (Smithing) ================= -->
+
+  <ThingDef ParentName="DExDoorBase">
+    <defName>DEx_DoorJail</defName>
+    <label>jail door</label>
+    <description>A sliding jail cell door with strong bars.</description>
+    <size>(1,1)</size>
+    <rotatable>false</rotatable>
+    <statBases>
+      <WorkToBuild>1500</WorkToBuild>
+      <MaxHitPoints>300</MaxHitPoints>
+    </statBases>
+    <costStuffCount>50</costStuffCount>
+    <costList>
+      <Steel>30</Steel>
+      <ComponentIndustrial>2</ComponentIndustrial>
+    </costList>
+    <stuffCategories Inherit="False">
+      <li>Metallic</li>
+    </stuffCategories>
+    <graphicData>
+      <texPath>Things/Building/DEx/Door/JailCell_Mover</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <shaderType>CutoutComplex</shaderType>
+      <drawSize>(1,1)</drawSize>
+      <damageData>
+        <enabled>false</enabled>
+      </damageData>
+    </graphicData>
+    <uiIconPath>Things/Building/DEx/Door/JailCell_Mover</uiIconPath>
+    <building>
+      <isStuffableAirtight>true</isStuffableAirtight>
+      <soundDoorOpenManual>DEx_JailDoorOpen</soundDoorOpenManual>
+      <soundDoorCloseManual>DEx_JailDoorClose</soundDoorCloseManual>
+    </building>
+    <researchPrerequisites>
+      <li>Smithing</li>
+    </researchPrerequisites>
+  </ThingDef>
+
+  <!-- ================= Gate (Smithing) ================= -->
+
+  <ThingDef ParentName="DExMultiDoorBase">
+    <defName>DEx_Gate</defName>
+    <label>gate</label>
+    <description>A wide, heavy gate spanning two tiles. Requires adjacent walls to function.</description>
+    <size>(2,1)</size>
+    <statBases>
+      <WorkToBuild>2500</WorkToBuild>
+      <MaxHitPoints>500</MaxHitPoints>
+    </statBases>
+    <costStuffCount>100</costStuffCount>
+    <graphicData>
+      <texPath>Things/Building/DEx/Door/GateDoubleThick_Mover</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <drawSize>(2,2)</drawSize>
+      <damageData>
+        <enabled>false</enabled>
+      </damageData>
+    </graphicData>
+    <uiIconPath>Things/Building/DEx/Door/Gate_MenuUI</uiIconPath>
+    <building>
+      <isStuffableAirtight>true</isStuffableAirtight>
+      <blueprintGraphicData>
+        <texPath>Things/Building/DEx/Door/GateDoubleThick_Mover</texPath>
+        <graphicClass>Graphic_Multi</graphicClass>
+        <drawSize>(2,2)</drawSize>
+      </blueprintGraphicData>
+    </building>
+    <comps>
+      <li Class="DECO.CompProperties_DoorExpanded">
+        <doorType>DoubleSwing</doorType>
+        <fixedPerspective>true</fixedPerspective>
+        <rotatesSouth>false</rotatesSouth>
+      </li>
+    </comps>
+    <researchPrerequisites>
+      <li>Smithing</li>
+    </researchPrerequisites>
+  </ThingDef>
+
+  <!-- ================= Blast doors (Machining) ================= -->
+  <!-- Decorative frames/async leaves are a later milestone. These ship as sliding doors. -->
+
+  <ThingDef ParentName="DExDoorBase">
+    <defName>DEx_BlastDoorSingle</defName>
+    <label>blast door (1x1)</label>
+    <description>A heavy door that is far more resilient to damage.</description>
+    <!-- 1x1 but uses the expanded draw class so it gets the static frame (the housing the
+         single panel slides within). singleDoor => only one moving leaf is drawn. -->
+    <thingClass>DECO.Building_DoorExpanded</thingClass>
+    <size>(1,1)</size>
+    <rotatable>false</rotatable>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <useBlueprintGraphicAsGhost>true</useBlueprintGraphicAsGhost>
+    <statBases>
+      <WorkToBuild>2000</WorkToBuild>
+      <MaxHitPoints>500</MaxHitPoints>
+      <Flammability>0.5</Flammability>
+    </statBases>
+    <costStuffCount>75</costStuffCount>
+    <costList>
+      <Steel>40</Steel>
+      <ComponentIndustrial>4</ComponentIndustrial>
+    </costList>
+    <stuffCategories Inherit="False">
+      <li>Metallic</li>
+    </stuffCategories>
+    <graphicData>
+      <texPath>Things/Building/DEx/Door/DoorBlastDoor_MoverSingle</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(1,1)</drawSize>
+      <damageData>
+        <enabled>false</enabled>
+      </damageData>
+    </graphicData>
+    <uiIconPath>Things/Building/DEx/Door/BlastDoorSingleUI</uiIconPath>
+    <building>
+      <isStuffableAirtight>true</isStuffableAirtight>
+      <blueprintClass>Blueprint_Build</blueprintClass>
+      <blueprintGraphicData>
+        <texPath>Things/Building/DEx/Door/DoorBlastDoorSingle</texPath>
+        <graphicClass>Graphic_Single</graphicClass>
+        <drawSize>(1,1)</drawSize>
+      </blueprintGraphicData>
+      <soundDoorOpenManual>DEx_BlastDoorOpen</soundDoorOpenManual>
+      <soundDoorCloseManual>DEx_BlastDoorClose</soundDoorCloseManual>
+    </building>
+    <comps>
+      <li Class="DECO.CompProperties_DoorExpanded">
+        <doorType>Standard</doorType>
+        <rotatesSouth>false</rotatesSouth>
+        <doorFrame>
+          <texPath>Things/Building/DEx/Door/DoorBlastDoorSingle</texPath>
+          <graphicClass>Graphic_Single</graphicClass>
+          <shaderType>CutoutComplex</shaderType>
+          <drawSize>(1,1)</drawSize>
+          <damageData><enabled>false</enabled></damageData>
+        </doorFrame>
+      </li>
+      <li Class="CompProperties_Breakdownable"/>
+    </comps>
+    <researchPrerequisites>
+      <li>Machining</li>
+    </researchPrerequisites>
+    <constructionSkillPrerequisite>6</constructionSkillPrerequisite>
+  </ThingDef>
+
+  <ThingDef ParentName="DExMultiDoorBase">
+    <defName>DEx_BlastDoor</defName>
+    <label>blast door (2x1)</label>
+    <description>A heavy pair of doors that are far more resilient to damage. Requires adjacent walls to function.</description>
+    <size>(2,1)</size>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <statBases>
+      <WorkToBuild>4000</WorkToBuild>
+      <MaxHitPoints>1000</MaxHitPoints>
+      <Flammability>0.5</Flammability>
+    </statBases>
+    <costStuffCount>150</costStuffCount>
+    <costList>
+      <Steel>80</Steel>
+      <ComponentIndustrial>7</ComponentIndustrial>
+    </costList>
+    <stuffCategories Inherit="False">
+      <li>Metallic</li>
+    </stuffCategories>
+    <graphicData>
+      <texPath>Things/Building/DEx/Door/DoorBlastDoor_Mover</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <drawSize>(2,1)</drawSize>
+      <damageData>
+        <enabled>false</enabled>
+      </damageData>
+    </graphicData>
+    <uiIconPath>Things/Building/DEx/Door/BlastDoorUI</uiIconPath>
+    <building>
+      <isStuffableAirtight>true</isStuffableAirtight>
+      <soundDoorOpenManual>DEx_BlastDoorOpen</soundDoorOpenManual>
+      <soundDoorCloseManual>DEx_BlastDoorClose</soundDoorCloseManual>
+      <blueprintGraphicData>
+        <texPath>Things/Building/DEx/Door/DoorBlastDoor_Frame</texPath>
+        <graphicClass>Graphic_Multi</graphicClass>
+        <drawSize>(2,1)</drawSize>
+      </blueprintGraphicData>
+    </building>
+    <comps>
+      <li Class="DECO.CompProperties_DoorExpanded">
+        <doorType>Standard</doorType>
+        <fixedPerspective>true</fixedPerspective>
+        <rotatesSouth>false</rotatesSouth>
+        <doorAsync>
+          <texPath>Things/Building/DEx/Door/DoorBlastDoor_MoverAsync</texPath>
+          <graphicClass>Graphic_Multi</graphicClass>
+          <drawSize>(2,1)</drawSize>
+          <damageData><enabled>false</enabled></damageData>
+        </doorAsync>
+        <doorFrame>
+          <texPath>Things/Building/DEx/Door/DoorBlastDoor_Frame</texPath>
+          <graphicClass>Graphic_Multi</graphicClass>
+          <shaderType>CutoutComplex</shaderType>
+          <drawSize>(2,1)</drawSize>
+          <damageData><enabled>false</enabled></damageData>
+        </doorFrame>
+        <doorFrameSplit>
+          <texPath>Things/Building/DEx/Door/DoorBlastDoor_FrameAsync</texPath>
+          <graphicClass>Graphic_Multi</graphicClass>
+          <shaderType>CutoutComplex</shaderType>
+          <drawSize>(2,1)</drawSize>
+          <damageData><enabled>false</enabled></damageData>
+        </doorFrameSplit>
+      </li>
+      <li Class="CompProperties_Breakdownable"/>
+    </comps>
+    <researchPrerequisites>
+      <li>Machining</li>
+    </researchPrerequisites>
+    <constructionSkillPrerequisite>6</constructionSkillPrerequisite>
+  </ThingDef>
+
+  <ThingDef ParentName="DExMultiDoorBase">
+    <defName>DEx_BlastDoorThick</defName>
+    <label>blast door (3x2)</label>
+    <description>An enormous, heavily reinforced pair of blast doors spanning a 3x2 area. Requires adjacent walls to function.</description>
+    <size>(3,2)</size>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <statBases>
+      <WorkToBuild>8000</WorkToBuild>
+      <MaxHitPoints>2000</MaxHitPoints>
+      <Flammability>0.5</Flammability>
+    </statBases>
+    <costStuffCount>300</costStuffCount>
+    <costList>
+      <Steel>160</Steel>
+      <ComponentIndustrial>14</ComponentIndustrial>
+    </costList>
+    <stuffCategories Inherit="False">
+      <li>Metallic</li>
+    </stuffCategories>
+    <graphicData>
+      <texPath>Things/Building/DEx/Door/DoorBlastDoor_Mover</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <drawSize>(3,2)</drawSize>
+      <damageData>
+        <enabled>false</enabled>
+      </damageData>
+    </graphicData>
+    <uiIconPath>Things/Building/DEx/Door/BlastDoorUI</uiIconPath>
+    <building>
+      <isStuffableAirtight>true</isStuffableAirtight>
+      <soundDoorOpenManual>DEx_BlastDoorOpen</soundDoorOpenManual>
+      <soundDoorCloseManual>DEx_BlastDoorClose</soundDoorCloseManual>
+      <blueprintGraphicData>
+        <texPath>Things/Building/DEx/Door/DoorBlastDoor_Frame</texPath>
+        <graphicClass>Graphic_Multi</graphicClass>
+        <drawSize>(3,2)</drawSize>
+      </blueprintGraphicData>
+    </building>
+    <comps>
+      <li Class="DECO.CompProperties_DoorExpanded">
+        <doorType>Standard</doorType>
+        <fixedPerspective>true</fixedPerspective>
+        <rotatesSouth>false</rotatesSouth>
+        <doorAsync>
+          <texPath>Things/Building/DEx/Door/DoorBlastDoor_MoverAsync</texPath>
+          <graphicClass>Graphic_Multi</graphicClass>
+          <drawSize>(3,2)</drawSize>
+          <damageData><enabled>false</enabled></damageData>
+        </doorAsync>
+        <doorFrame>
+          <texPath>Things/Building/DEx/Door/DoorBlastDoor_Frame</texPath>
+          <graphicClass>Graphic_Multi</graphicClass>
+          <shaderType>CutoutComplex</shaderType>
+          <drawSize>(3,2)</drawSize>
+          <damageData><enabled>false</enabled></damageData>
+        </doorFrame>
+        <doorFrameSplit>
+          <texPath>Things/Building/DEx/Door/DoorBlastDoor_FrameAsync</texPath>
+          <graphicClass>Graphic_Multi</graphicClass>
+          <shaderType>CutoutComplex</shaderType>
+          <drawSize>(3,2)</drawSize>
+          <damageData><enabled>false</enabled></damageData>
+        </doorFrameSplit>
+      </li>
+      <li Class="CompProperties_Breakdownable"/>
+    </comps>
+    <researchPrerequisites>
+      <li>Machining</li>
+    </researchPrerequisites>
+    <constructionSkillPrerequisite>6</constructionSkillPrerequisite>
+  </ThingDef>
+
+</Defs>

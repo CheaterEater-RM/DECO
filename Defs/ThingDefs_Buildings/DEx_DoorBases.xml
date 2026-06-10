@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <!--
+  DECO door bases. These inherit from vanilla "DoorBase", so they get all vanilla
+  door behaviour (state machine, pathing, regions, power, forbidding, temperature)
+  for free. M0 is pure XML on vanilla classes: 1x1 doors use Building_Door, wider
+  doors use Building_MultiTileDoor. No custom thingClass in M0.
+  -->
+
+  <!-- 1x1 door base. Building_Door. Inherits vanilla DoorBase wholesale. -->
+  <ThingDef Name="DExDoorBase" ParentName="DoorBase" Abstract="True">
+    <designationCategory>Structure</designationCategory>
+    <uiOrder>2015</uiOrder>
+  </ThingDef>
+
+  <!--
+  Multi-tile door base. DECO.Building_DoorExpanded (a Building_MultiTileDoor subclass
+  with a custom full-width slide draw). The DECO _Mover art is authored at full door
+  width, which vanilla Building_MultiTileDoor would squish to half and double-draw;
+  the subclass draws the full-width leaf/leaves itself. Behaviour (pathing, regions,
+  power, forbidding, temperature) is all inherited from vanilla.
+
+  Follows the vanilla OrnateDoor / SecurityDoor placement pattern: Blueprint_Build
+  (not Blueprint_Door, which is 1x1 only), useBlueprintGraphicAsGhost with a
+  closed-composite blueprint graphic, rotatable, PlaceWorker_MultiCellDoor.
+  Concrete defs must supply graphicData, blueprintGraphicData, size, uiIconPath,
+  and a DECO.CompProperties_DoorExpanded comp.
+  -->
+  <ThingDef Name="DExMultiDoorBase" ParentName="DoorBase" Abstract="True">
+    <thingClass>DECO.Building_DoorExpanded</thingClass>
+    <designationCategory>Structure</designationCategory>
+    <uiOrder>2016</uiOrder>
+    <rotatable>true</rotatable>
+    <useBlueprintGraphicAsGhost>true</useBlueprintGraphicAsGhost>
+    <building>
+      <blueprintClass>Blueprint_Build</blueprintClass>
+    </building>
+    <placeWorkers>
+      <li>PlaceWorker_MultiCellDoor</li>
+    </placeWorkers>
+  </ThingDef>
+
+</Defs>
