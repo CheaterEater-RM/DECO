@@ -139,6 +139,38 @@ Dependencies: M2 remote doors validated.
 - Ensure that if we use a "build remote" from a door, it gets linked automatically
 - Allow labelling remote switches (completed)
 - Add clearer lines for remote switches to doors (completed)
-- Check containment with Anomaly
-- Ensure that creatures and anything else can't get through
+- Check containment with Anomaly (audited 2026-06-10, no code change needed — see below)
+- Ensure that creatures and anything else can't get through (resolved by inheritance — see below)
 - Allow Rimworld security door to use buttons
+
+### Anomaly Containment Audit (2026-06-10)
+
+Audited how the Anomaly DLC's entity containment interacts with DECO doors, especially the
+3x2 blast door `PH_DoorThickBlastDoor`. **Conclusion: no bug; no code change.** Cleared by
+inheritance + an invariant in AGENTS.md (hard rule 13).
+
+Why it works:
+
+- Every DECO door is a `Building_Door` subclass, so vanilla
+  `StatWorker_ContainmentStrength.CalculateDoorStats` counts them. It collects doors into a
+  `HashSet<Building_Door>`, deduping by object reference — so the 3x2 door (or any multi-tile
+  door) is counted **once** at its full HitPoints, never per-cell.
+- `Building_Door.ContainmentBreached` (`openInt && ticksOpen >= 600`) and `BlocksPawn` /
+  `CanPhysicallyPass` are inherited untouched. `Building_DoorRemote` only overrides
+  `PawnCanOpen` to return false *more* often (when remotely secured) — it blocks more, never
+  less, so "creatures can't get through" holds.
+- The remote 30-tick `DoorOpen(120)` refresh extends the close timer but does **not** reset
+  `ticksOpen`, so a remotely-held-open blast door still reads as breached after 10 s (correct).
+
+Caveats (not bugs, no shipped def affected):
+
+- A door authored as `FreePassage` (DoorType => `AlwaysOpen`) would read as permanently
+  breached. No DECO def uses FreePassage (all are Standard/Stretch/DoubleSwing). Do not put a
+  FreePassage door on a containment room.
+- Curtains (`isStuffableAirtight=false`, ~50-150 HP) give low door contribution (HP/5) — low
+  containment strength, not a breach. Working as intended.
+
+In-game verification still pending: build a holding room with a 3x2 blast door + platform +
+entity, confirm the ContainmentStrength breakdown shows the door HP line with doorCount=1,
+hold it open 10 s to confirm "Door forced open" zeroes the contribution (manually and via the
+remote button), and confirm a secured door blocks an escaping entity.
