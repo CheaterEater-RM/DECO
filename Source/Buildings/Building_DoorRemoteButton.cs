@@ -171,7 +171,7 @@ namespace DoorsExpanded
         private void ApplyStateToLinkedDoors()
         {
             foreach (var linkedDoor in LinkedDoors)
-                linkedDoor.Notify_RemoteStateChanged();
+                linkedDoor.Notify_RemoteStateChanged(buttonEdge: true);
         }
 
         private void ScrubLinkedDoors()

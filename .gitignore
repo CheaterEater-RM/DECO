@@ -19,8 +19,6 @@ RimWorld.Paths.props
 [Rr]elease/
 *.pdb
 
-# Compiled mod assemblies are build output.
-1.6/Assemblies/*.dll
 
 # Debug symbols that land in the output folder
 1.6/Assemblies/*.pdb

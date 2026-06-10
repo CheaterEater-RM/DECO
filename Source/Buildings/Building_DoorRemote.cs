@@ -14,6 +14,9 @@ namespace DoorsExpanded
 
         private Building_DoorRemoteButton button;
         private bool securedRemotely;
+        // Set when a remote close cleared the player's hold-open; restored once the door
+        // finishes closing so the setting survives for the next manual open.
+        private bool restoreHoldOpenOnClose;
 
         public Building_DoorRemoteButton Button
         {
@@ -42,6 +45,12 @@ namespace DoorsExpanded
                 if (securedRemotely == next)
                     return;
 
+                // Force "hold open" off before securing remotely. Otherwise the hold-open
+                // gizmo gets disabled while still active, leaving the door stuck open with
+                // no way to clear it. Securing means the remote is the sole authority.
+                if (next)
+                    holdOpenInt = false;
+
                 securedRemotely = next;
                 Notify_RemoteStateChanged();
             }
@@ -68,11 +77,17 @@ namespace DoorsExpanded
             base.ExposeData();
             Scribe_References.Look(ref button, "button");
             Scribe_Values.Look(ref securedRemotely, "securedRemotely", false);
+            Scribe_Values.Look(ref restoreHoldOpenOnClose, "restoreHoldOpenOnClose", false);
         }
 
         protected override void Tick()
         {
             base.Tick();
+            if (restoreHoldOpenOnClose && !Open)
+            {
+                holdOpenInt = true;
+                restoreHoldOpenOnClose = false;
+            }
             if (button != null && this.IsHashIntervalTick(30))
                 Notify_RemoteStateChanged();
         }
@@ -133,7 +148,11 @@ namespace DoorsExpanded
             }
         }
 
-        public void Notify_RemoteStateChanged()
+        // buttonEdge is true only when the player just toggled the button (a deliberate
+        // action), false for passive reconciles (tick, spawn, (un)link). Passive reconciles
+        // must not fight pawn-driven opening on an unsecured door — only a secured door is
+        // continuously forced closed.
+        public void Notify_RemoteStateChanged(bool buttonEdge = false)
         {
             if (!Spawned || button is not { Spawned: true } || !RemoteCanAct)
                 return;
@@ -142,9 +161,19 @@ namespace DoorsExpanded
             {
                 DoorOpen(RemoteOpenRefreshTicks);
             }
-            else if (Open)
+            else if (Open && (buttonEdge || SecuredRemotely))
             {
-                DoorTryClose();
+                // The remote closing the door must override a manual "hold open" — player
+                // input wins. But don't slam it shut on a pawn mid-stride: clear hold-open
+                // and drive the close through vanilla's timer, which defers while a pawn
+                // occupies the doorway. Tick puts the hold-open setting back once the
+                // door has actually closed (see restoreHoldOpenOnClose).
+                if (holdOpenInt)
+                {
+                    holdOpenInt = false;
+                    restoreHoldOpenOnClose = true;
+                }
+                ticksUntilClose = 1;
             }
         }
 
