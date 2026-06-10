@@ -93,6 +93,8 @@
     <defName>HeronCurtainTribal</defName>
     <label>curtain</label>
     <description>Divides rooms. Curtains open much faster than standard doors, but are flammable and offer no airtight seal.</description>
+    <!-- Curtains refund their full build cost on deconstruction (vanilla doors default to 0.5). -->
+    <resourcesFractionWhenDeconstructed>1.0</resourcesFractionWhenDeconstructed>
     <!-- Expanded class for the Stretch animation: a single sheet that bunches to one side.
          Vanilla Building_Door would draw the full-width sheet twice, sliding apart. -->
     <thingClass>DoorsExpanded.Building_DoorExpanded</thingClass>
@@ -138,6 +140,8 @@
     <defName>HeronCurtainTribalDouble</defName>
     <label>curtain (2x1)</label>
     <description>Divides rooms. A wide curtain spanning two tiles. Opens much faster than standard doors, but is flammable and offers no airtight seal.</description>
+    <!-- Curtains refund their full build cost on deconstruction (vanilla doors default to 0.5). -->
+    <resourcesFractionWhenDeconstructed>1.0</resourcesFractionWhenDeconstructed>
     <size>(2,1)</size>
     <statBases>
       <WorkToBuild>1700</WorkToBuild>
@@ -184,6 +188,8 @@
     <defName>HeronCurtainTribalTriple</defName>
     <label>curtain (3x1)</label>
     <description>Divides rooms. A wide curtain spanning three tiles. Opens much faster than standard doors, but is flammable and offers no airtight seal.</description>
+    <!-- Curtains refund their full build cost on deconstruction (vanilla doors default to 0.5). -->
+    <resourcesFractionWhenDeconstructed>1.0</resourcesFractionWhenDeconstructed>
     <size>(3,1)</size>
     <statBases>
       <WorkToBuild>2550</WorkToBuild>

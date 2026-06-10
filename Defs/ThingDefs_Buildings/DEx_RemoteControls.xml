@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <!-- ================= Remote buttons and levers (Microelectronics) ================= -->
+
+  <ThingDef Name="DExRemoteControlBase" ParentName="BuildingBase" Abstract="True">
+    <thingClass>DoorsExpanded.Building_DoorRemoteButton</thingClass>
+    <category>Building</category>
+    <designationCategory>Structure</designationCategory>
+    <uiOrder>2017</uiOrder>
+    <rotatable>true</rotatable>
+    <defaultPlacingRot>South</defaultPlacingRot>
+    <hasInteractionCell>true</hasInteractionCell>
+    <interactionCellOffset>(0,0,1)</interactionCellOffset>
+    <clearBuildingArea>false</clearBuildingArea>
+    <altitudeLayer>BuildingOnTop</altitudeLayer>
+    <passability>PassThroughOnly</passability>
+    <pathCost>50</pathCost>
+    <fillPercent>0.40</fillPercent>
+    <tickerType>Normal</tickerType>
+    <drawerType>RealtimeOnly</drawerType>
+    <selectable>true</selectable>
+    <constructEffect>ConstructDirt</constructEffect>
+    <soundImpactDefault>BulletImpact_Ground</soundImpactDefault>
+    <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
+    <resourcesFractionWhenDeconstructed>0.5</resourcesFractionWhenDeconstructed>
+    <building>
+      <isEdifice>false</isEdifice>
+    </building>
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>1</basePowerConsumption>
+      </li>
+    </comps>
+    <researchPrerequisites>
+      <li>MicroelectronicsBasics</li>
+    </researchPrerequisites>
+  </ThingDef>
+
+  <ThingDef ParentName="DExRemoteControlBase">
+    <defName>PH_DoorButton</defName>
+    <label>door button</label>
+    <description>A powered button that toggles any linked remote doors.</description>
+    <statBases>
+      <MaxHitPoints>80</MaxHitPoints>
+      <WorkToBuild>200</WorkToBuild>
+      <Flammability>1</Flammability>
+    </statBases>
+    <costList>
+      <Steel>10</Steel>
+      <ComponentIndustrial>1</ComponentIndustrial>
+    </costList>
+    <graphicData>
+      <texPath>Things/Building/DEx/RemoteDoorButton/RemoteDoorButton_OFF</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <drawSize>2</drawSize>
+      <shadowData>
+        <volume>(0.9,0.3,0.9)</volume>
+      </shadowData>
+      <damageData>
+        <rect>(0.2,0,0.6,0.1)</rect>
+      </damageData>
+    </graphicData>
+    <building>
+      <isEdifice>false</isEdifice>
+      <fullGraveGraphicData>
+        <texPath>Things/Building/DEx/RemoteDoorButton/RemoteDoorButton_ON</texPath>
+        <graphicClass>Graphic_Multi</graphicClass>
+        <drawSize>2</drawSize>
+        <shadowData>
+          <volume>(0.9,0.3,0.9)</volume>
+        </shadowData>
+        <damageData>
+          <rect>(0.2,0,0.6,0.1)</rect>
+        </damageData>
+      </fullGraveGraphicData>
+    </building>
+  </ThingDef>
+
+  <ThingDef ParentName="DExRemoteControlBase">
+    <defName>PH_DoorLever</defName>
+    <label>door lever</label>
+    <description>A powered lever that toggles any linked remote doors.</description>
+    <statBases>
+      <MaxHitPoints>40</MaxHitPoints>
+      <WorkToBuild>100</WorkToBuild>
+      <Flammability>1</Flammability>
+    </statBases>
+    <costList>
+      <Steel>5</Steel>
+      <ComponentIndustrial>1</ComponentIndustrial>
+    </costList>
+    <graphicData>
+      <texPath>Things/Building/DEx/RemoteDoorLever/RemoteDoorLever_OFF</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <drawSize>2</drawSize>
+      <shadowData>
+        <volume>(0.9,0.3,0.9)</volume>
+      </shadowData>
+      <damageData>
+        <rect>(0.2,0,0.6,0.1)</rect>
+      </damageData>
+    </graphicData>
+    <building>
+      <isEdifice>false</isEdifice>
+      <fullGraveGraphicData>
+        <texPath>Things/Building/DEx/RemoteDoorLever/RemoteDoorLever_ON</texPath>
+        <graphicClass>Graphic_Multi</graphicClass>
+        <drawSize>2</drawSize>
+        <shadowData>
+          <volume>(0.9,0.3,0.9)</volume>
+        </shadowData>
+        <damageData>
+          <rect>(0.2,0,0.6,0.1)</rect>
+        </damageData>
+      </fullGraveGraphicData>
+    </building>
+  </ThingDef>
+
+  <!-- ================= Remote garage-style doors (Microelectronics) ================= -->
+
+  <ThingDef ParentName="DExDoorBase">
+    <defName>PH_DoorRemoteSingle</defName>
+    <label>remote door</label>
+    <description>A vertical sliding metal door that is controlled by a linked button or lever.</description>
+    <thingClass>DoorsExpanded.Building_DoorRemote</thingClass>
+    <size>(1,1)</size>
+    <rotatable>false</rotatable>
+    <useBlueprintGraphicAsGhost>true</useBlueprintGraphicAsGhost>
+    <statBases>
+      <Mass>20</Mass>
+      <MaxHitPoints>160</MaxHitPoints>
+      <WorkToBuild>1000</WorkToBuild>
+      <DoorOpenSpeed>0.25</DoorOpenSpeed>
+    </statBases>
+    <costStuffCount>25</costStuffCount>
+    <costList>
+      <Steel>20</Steel>
+      <ComponentIndustrial>1</ComponentIndustrial>
+    </costList>
+    <stuffCategories Inherit="False">
+      <li>Metallic</li>
+    </stuffCategories>
+    <graphicData>
+      <texPath>Things/Building/DEx/Door/DoorRemote_Mover</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(1,1)</drawSize>
+      <damageData>
+        <enabled>false</enabled>
+      </damageData>
+    </graphicData>
+    <uiIconPath>Things/Building/DEx/Door/DoorRemote_Mover</uiIconPath>
+    <building>
+      <isStuffableAirtight>true</isStuffableAirtight>
+      <blueprintClass>Blueprint_Build</blueprintClass>
+      <blueprintGraphicData>
+        <texPath>Things/Building/DEx/Door/DoorRemote_Blueprint</texPath>
+        <graphicClass>Graphic_Single</graphicClass>
+        <drawSize>(1,1)</drawSize>
+      </blueprintGraphicData>
+      <soundDoorOpenManual>DEx_GarageOpen</soundDoorOpenManual>
+      <soundDoorCloseManual>DEx_GarageClose</soundDoorCloseManual>
+    </building>
+    <comps>
+      <li Class="DoorsExpanded.CompProperties_DoorExpanded">
+        <doorType>StretchVertical</doorType>
+        <singleDoor>true</singleDoor>
+        <remoteDoor>true</remoteDoor>
+      </li>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>15</basePowerConsumption>
+      </li>
+      <li Class="CompProperties_Breakdownable"/>
+    </comps>
+    <researchPrerequisites>
+      <li>MicroelectronicsBasics</li>
+    </researchPrerequisites>
+    <constructionSkillPrerequisite>6</constructionSkillPrerequisite>
+  </ThingDef>
+
+  <ThingDef ParentName="DExMultiDoorBase">
+    <defName>PH_DoorRemoteDouble</defName>
+    <label>remote door (2x1)</label>
+    <description>A wide vertical sliding metal door that is controlled by a linked button or lever.</description>
+    <thingClass>DoorsExpanded.Building_DoorRemote</thingClass>
+    <size>(2,1)</size>
+    <statBases>
+      <Mass>40</Mass>
+      <MaxHitPoints>320</MaxHitPoints>
+      <WorkToBuild>2000</WorkToBuild>
+      <DoorOpenSpeed>0.25</DoorOpenSpeed>
+    </statBases>
+    <costStuffCount>50</costStuffCount>
+    <costList>
+      <Steel>40</Steel>
+      <ComponentIndustrial>2</ComponentIndustrial>
+    </costList>
+    <stuffCategories Inherit="False">
+      <li>Metallic</li>
+    </stuffCategories>
+    <graphicData>
+      <texPath>Things/Building/DEx/Door/DoorDoubleRemote_Mover</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(2,1)</drawSize>
+      <damageData>
+        <enabled>false</enabled>
+      </damageData>
+    </graphicData>
+    <uiIconPath>Things/Building/DEx/Door/DoorDoubleRemote_Mover</uiIconPath>
+    <building>
+      <isStuffableAirtight>true</isStuffableAirtight>
+      <blueprintGraphicData>
+        <texPath>Things/Building/DEx/Door/DoorDoubleRemote_Blueprint</texPath>
+        <graphicClass>Graphic_Single</graphicClass>
+        <drawSize>(2,1)</drawSize>
+      </blueprintGraphicData>
+      <soundDoorOpenManual>DEx_GarageOpen</soundDoorOpenManual>
+      <soundDoorCloseManual>DEx_GarageClose</soundDoorCloseManual>
+    </building>
+    <comps>
+      <li Class="DoorsExpanded.CompProperties_DoorExpanded">
+        <doorType>StretchVertical</doorType>
+        <singleDoor>true</singleDoor>
+        <remoteDoor>true</remoteDoor>
+      </li>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>30</basePowerConsumption>
+      </li>
+      <li Class="CompProperties_Breakdownable"/>
+    </comps>
+    <researchPrerequisites>
+      <li>MicroelectronicsBasics</li>
+    </researchPrerequisites>
+    <constructionSkillPrerequisite>6</constructionSkillPrerequisite>
+  </ThingDef>
+
+  <ThingDef ParentName="DExMultiDoorBase">
+    <defName>PH_DoorRemoteTriple</defName>
+    <label>remote door (3x1)</label>
+    <description>A wide vertical sliding metal door that is controlled by a linked button or lever.</description>
+    <thingClass>DoorsExpanded.Building_DoorRemote</thingClass>
+    <size>(3,1)</size>
+    <statBases>
+      <Mass>60</Mass>
+      <MaxHitPoints>480</MaxHitPoints>
+      <WorkToBuild>3000</WorkToBuild>
+      <DoorOpenSpeed>0.25</DoorOpenSpeed>
+    </statBases>
+    <costStuffCount>75</costStuffCount>
+    <costList>
+      <Steel>60</Steel>
+      <ComponentIndustrial>3</ComponentIndustrial>
+    </costList>
+    <stuffCategories Inherit="False">
+      <li>Metallic</li>
+    </stuffCategories>
+    <graphicData>
+      <texPath>Things/Building/DEx/Door/DoorTripleRemote_Mover</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(3,1)</drawSize>
+      <damageData>
+        <enabled>false</enabled>
+      </damageData>
+    </graphicData>
+    <uiIconPath>Things/Building/DEx/Door/DoorTripleRemote_Mover</uiIconPath>
+    <building>
+      <isStuffableAirtight>true</isStuffableAirtight>
+      <blueprintGraphicData>
+        <texPath>Things/Building/DEx/Door/DoorTripleRemote_Blueprint</texPath>
+        <graphicClass>Graphic_Single</graphicClass>
+        <drawSize>(3,1)</drawSize>
+      </blueprintGraphicData>
+      <soundDoorOpenManual>DEx_GarageOpen</soundDoorOpenManual>
+      <soundDoorCloseManual>DEx_GarageClose</soundDoorCloseManual>
+    </building>
+    <comps>
+      <li Class="DoorsExpanded.CompProperties_DoorExpanded">
+        <doorType>StretchVertical</doorType>
+        <singleDoor>true</singleDoor>
+        <remoteDoor>true</remoteDoor>
+      </li>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>45</basePowerConsumption>
+      </li>
+      <li Class="CompProperties_Breakdownable"/>
+    </comps>
+    <researchPrerequisites>
+      <li>MicroelectronicsBasics</li>
+    </researchPrerequisites>
+    <constructionSkillPrerequisite>6</constructionSkillPrerequisite>
+  </ThingDef>
+
+</Defs>

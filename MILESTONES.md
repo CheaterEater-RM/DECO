@@ -85,6 +85,36 @@ Dependencies: scaffold complete.
 
 ## Planned
 
+### M2 - Remote doors
+
+Implemented (C# + XML, pending in-game validation):
+
+- `Building_DoorRemote` now keeps the original save fields (`button`,
+  `securedRemotely`) and links to exactly one remote controller.
+- `Building_DoorRemoteButton` now keeps the original save fields (`linkedDoors`,
+  `buttonOn`, `needsToBeSwitched`) and can link multiple doors.
+- The controller's `buttonOn` state is authoritative. Linked doors continually
+  reconcile toward that state: on keeps refreshing `DoorOpen(...)`; off keeps
+  retrying `DoorTryClose()` if blocked. Remote state does not write vanilla
+  `holdOpenInt`, avoiding stale hold-open behavior when toggling secured mode.
+- `securedRemotely` only controls pawn permission: when the linked controller is
+  off, `PawnCanOpen` returns false. The button/lever state still owns open/close.
+- Added `PH_DoorButton`, `PH_DoorLever`, and `PH_DoorRemoteSingle/Double/Triple`
+  defs under Microelectronics, plus keyed UI labels.
+
+Remaining verification (in-game):
+
+- Confirm no startup XML or texture errors for the new button/lever and remote
+  garage door defs.
+- Verify one door cannot stay linked to two controllers, while one controller can
+  drive multiple doors.
+- Verify controller on holds linked doors open and controller off retries closing
+  after a blocking pawn/item moves.
+- Verify disabling/enabling secured remotely never leaves a stale vanilla
+  hold-open state behind.
+- Verify power loss prevents powered remote actuation, and the door catches up
+  to the controller state once power returns.
+
 ### M1 - Animated doors
 
 - Add draw-only animated door type.
@@ -93,12 +123,6 @@ Dependencies: scaffold complete.
 
 Dependencies: M0 XML catalogue validated.
 
-### M2 - Remote doors
-
-- Add remote door, button or lever, link model, locked state, overlay cue, and interaction job.
-
-Dependencies: M1 animated doors validated.
-
 ### M3 - Polish
 
 - Decide label suffix behavior.
@@ -106,3 +130,15 @@ Dependencies: M1 animated doors validated.
 - Document save behavior, old-mod non-migration, attribution, and publishing checklist.
 
 Dependencies: M2 remote doors validated.
+
+
+### User Todos:
+- linked tribal curtains so that they move in sync when opposite one another
+- jail cell doors are not passable by prisoners, and they allow firing through (with extra unlock time)
+- Stop forbidding doors with secure remotely button (is this necessary?)
+- Ensure that if we use a "build remote" from a door, it gets linked automatically
+- Allow labelling remote switches
+- Add clearer lines for remote switches to doors
+- Check containment with Anomaly
+- Ensure that creatures and anything else can't get through
+- Allow Rimworld security door to use buttons

@@ -1,3 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
+  <PH_RemoteDoorSecuredRemotely>Secured remotely</PH_RemoteDoorSecuredRemotely>
+  <PH_RemoteDoorSecuredRemotelyDesc>Prevent pawns from opening this door while the linked button or lever is off.</PH_RemoteDoorSecuredRemotelyDesc>
+  <PH_ButtonNeeded>Requires a linked button or lever.</PH_ButtonNeeded>
+  <PH_ButtonConnect>Connect remote</PH_ButtonConnect>
+  <PH_ButtonConnectDesc>Choose the button or lever that controls this door.</PH_ButtonConnectDesc>
+  <PH_ButtonDisconnect>Disconnect remote</PH_ButtonDisconnect>
+  <PH_ButtonDisconnectDesc>Remove this door's remote-control link.</PH_ButtonDisconnectDesc>
+  <PH_ButtonConnectFailed>That is not a remote door button or lever.</PH_ButtonConnectFailed>
+  <PH_UseButtonOrLever>Use {0}</PH_UseButtonOrLever>
+  <PH_UseButtonOrLeverDesc>Toggle this control and make all linked doors match its state.</PH_UseButtonOrLeverDesc>
+  <PH_UseButtonOrLeverNoConnection>No linked remote doors.</PH_UseButtonOrLeverNoConnection>
+  <PH_UseButtonOrLeverNoPower>Requires power.</PH_UseButtonOrLeverNoPower>
 </LanguageData>
