@@ -348,6 +348,8 @@
       <WorkToBuild>2000</WorkToBuild>
       <MaxHitPoints>500</MaxHitPoints>
       <Flammability>0.5</Flammability>
+      <!-- 80% of a vanilla door's speed when powered (45/0.8 * 0.25 = 14.06 ticks); 20% unpowered. -->
+      <DoorOpenSpeed>0.8</DoorOpenSpeed>
     </statBases>
     <costStuffCount>75</costStuffCount>
     <costList>
@@ -376,6 +378,9 @@
       </blueprintGraphicData>
       <soundDoorOpenManual>DEx_BlastDoorOpen</soundDoorOpenManual>
       <soundDoorCloseManual>DEx_BlastDoorClose</soundDoorCloseManual>
+      <!-- Heavy hydraulic doors: normal speed on power, ~4x slower without it. -->
+      <unpoweredDoorOpenSpeedFactor>4.0</unpoweredDoorOpenSpeedFactor>
+      <unpoweredDoorCloseSpeedFactor>4.0</unpoweredDoorCloseSpeedFactor>
     </building>
     <comps>
       <li Class="DoorsExpanded.CompProperties_DoorExpanded">
@@ -389,6 +394,10 @@
           <drawSize>(1,1)</drawSize>
           <damageData><enabled>false</enabled></damageData>
         </doorFrame>
+      </li>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>50</basePowerConsumption>
       </li>
       <li Class="CompProperties_Breakdownable"/>
     </comps>
@@ -409,6 +418,8 @@
       <WorkToBuild>4000</WorkToBuild>
       <MaxHitPoints>1000</MaxHitPoints>
       <Flammability>0.5</Flammability>
+      <!-- 80% of a vanilla door's speed when powered (45/0.8 * 0.25 = 14.06 ticks); 20% unpowered. -->
+      <DoorOpenSpeed>0.8</DoorOpenSpeed>
     </statBases>
     <costStuffCount>150</costStuffCount>
     <costList>
@@ -436,6 +447,9 @@
         <graphicClass>Graphic_Multi</graphicClass>
         <drawSize>(2,1)</drawSize>
       </blueprintGraphicData>
+      <!-- Heavy hydraulic doors: normal speed on power, ~4x slower without it. -->
+      <unpoweredDoorOpenSpeedFactor>4.0</unpoweredDoorOpenSpeedFactor>
+      <unpoweredDoorCloseSpeedFactor>4.0</unpoweredDoorCloseSpeedFactor>
     </building>
     <comps>
       <li Class="DoorsExpanded.CompProperties_DoorExpanded">
@@ -464,6 +478,10 @@
           <damageData><enabled>false</enabled></damageData>
         </doorFrameSplit>
       </li>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>100</basePowerConsumption>
+      </li>
       <li Class="CompProperties_Breakdownable"/>
     </comps>
     <researchPrerequisites>
@@ -483,6 +501,8 @@
       <WorkToBuild>8000</WorkToBuild>
       <MaxHitPoints>2000</MaxHitPoints>
       <Flammability>0.5</Flammability>
+      <!-- 80% of a vanilla door's speed when powered (45/0.8 * 0.25 = 14.06 ticks); 20% unpowered. -->
+      <DoorOpenSpeed>0.8</DoorOpenSpeed>
     </statBases>
     <costStuffCount>300</costStuffCount>
     <costList>
@@ -510,6 +530,9 @@
         <graphicClass>Graphic_Multi</graphicClass>
         <drawSize>(3,2)</drawSize>
       </blueprintGraphicData>
+      <!-- Heavy hydraulic doors: normal speed on power, ~4x slower without it. -->
+      <unpoweredDoorOpenSpeedFactor>4.0</unpoweredDoorOpenSpeedFactor>
+      <unpoweredDoorCloseSpeedFactor>4.0</unpoweredDoorCloseSpeedFactor>
     </building>
     <comps>
       <li Class="DoorsExpanded.CompProperties_DoorExpanded">
@@ -537,6 +560,10 @@
           <drawSize>(3,2)</drawSize>
           <damageData><enabled>false</enabled></damageData>
         </doorFrameSplit>
+      </li>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>200</basePowerConsumption>
       </li>
       <li Class="CompProperties_Breakdownable"/>
     </comps>
