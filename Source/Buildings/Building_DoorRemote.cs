@@ -56,6 +56,11 @@ namespace DoorsExpanded
             }
         }
 
+        // Used by the build-button auto-link convenience (MapComponent_RemoteAutoLink): routes
+        // through the Button setter so the existing unlink/link/reconcile logic runs, including
+        // replacing any current link when re-linking to a freshly built button.
+        public void LinkToButton(Building_DoorRemoteButton newButton) => Button = newButton;
+
         public bool RemoteWantsOpen => button is { Spawned: true, ButtonOn: true };
 
         public bool RemoteForcesClosed => SecuredRemotely && !RemoteWantsOpen;
@@ -207,6 +212,50 @@ namespace DoorsExpanded
                     defaultDesc = "PH_ButtonDisconnectDesc".Translate(),
                     icon = RemoteControlTex.DisconnectButton,
                     action = () => Button = null
+                };
+            }
+
+            foreach (var buildGizmo in BuildButtonGizmos())
+                yield return buildGizmo;
+        }
+
+        // QoL: build a remote button/lever straight from the door. Once the placed button
+        // finishes construction it auto-links to this door (MapComponent_RemoteAutoLink), so
+        // the player skips the manual "Connect remote" targeting step. One gizmo per buildable
+        // remote-button def, discovered by thingClass so future button defs appear with no
+        // code change.
+        private IEnumerable<Gizmo> BuildButtonGizmos()
+        {
+            foreach (var buttonDef in DefDatabase<ThingDef>.AllDefsListForReading)
+            {
+                if (buttonDef.thingClass != typeof(Building_DoorRemoteButton))
+                    continue;
+
+                // Vanilla helper resolves icon/stuff and returns null when the def isn't
+                // currently buildable (e.g. unresearched), matching vanilla build commands.
+                if (BuildCopyCommandUtility.BuildCommand(buttonDef) is not Command_Action vanillaCommand)
+                    continue;
+
+                var def = buttonDef;
+                var startPlacement = vanillaCommand.action;
+                yield return new Command_Action
+                {
+                    defaultLabel = "PH_BuildButton".Translate(def.label),
+                    defaultDesc = "PH_BuildButtonDesc".Translate(def.label),
+                    icon = vanillaCommand.icon,
+                    iconProportions = vanillaCommand.iconProportions,
+                    iconDrawScale = vanillaCommand.iconDrawScale,
+                    iconTexCoords = vanillaCommand.iconTexCoords,
+                    iconAngle = vanillaCommand.iconAngle,
+                    iconOffset = vanillaCommand.iconOffset,
+                    defaultIconColor = vanillaCommand.defaultIconColor,
+                    action = () =>
+                    {
+                        Map.GetComponent<MapComponent_RemoteAutoLink>()?.Arm(this);
+                        startPlacement();
+                        Messages.Message("PH_BuildButtonArmed".Translate(def.label),
+                            this, MessageTypeDefOf.TaskCompletion, historical: false);
+                    }
                 };
             }
         }

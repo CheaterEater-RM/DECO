@@ -12,6 +12,9 @@
   <PH_UseButtonOrLeverDesc>Toggle this control and make all linked doors match its state.</PH_UseButtonOrLeverDesc>
   <PH_UseButtonOrLeverNoConnection>No linked remote doors.</PH_UseButtonOrLeverNoConnection>
   <PH_UseButtonOrLeverNoPower>Requires power.</PH_UseButtonOrLeverNoPower>
+  <PH_BuildButton>Build {0}</PH_BuildButton>
+  <PH_BuildButtonDesc>Place a {0} for this door. Once it finishes construction, this door automatically links to it, replacing any current remote link. You can still re-link manually afterwards.</PH_BuildButtonDesc>
+  <PH_BuildButtonArmed>This door will link to the next {0} you finish building.</PH_BuildButtonArmed>
   <PH_RenameButton>Rename</PH_RenameButton>
   <PH_RenameButtonDesc>Give this button or lever a custom name so you can tell your remote controls apart.</PH_RenameButtonDesc>
 </LanguageData>
