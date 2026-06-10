@@ -5,7 +5,9 @@
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
     <OutputType>Library</OutputType>
-    <RootNamespace>DECO</RootNamespace>
+    <!-- Namespace matches the original Doors Expanded so saved things resolve to our
+         classes (save interchangeability contract). Assembly identity remains DECO. -->
+    <RootNamespace>DoorsExpanded</RootNamespace>
     <AssemblyName>DECO</AssemblyName>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <AssemblyVersion>0.1.0.0</AssemblyVersion>

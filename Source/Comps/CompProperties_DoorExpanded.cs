@@ -1,27 +1,32 @@
 using UnityEngine;
 using Verse;
 
-namespace DECO
+namespace DoorsExpanded
 {
-    // Animation type for a DECO door. Explicit integer values; never reorder after
-    // first release (saved/referenced by ordinal). New values are appended only.
-    public enum DoorAnimationType
+    // Animation type for a DECO door. Names and explicit integer values match the original
+    // Doors Expanded enum exactly (part of the save/XML compatibility contract); never
+    // reorder after first release. New values are appended only.
+    public enum DoorType
     {
         Standard = 0,       // slide aside
         Stretch = 1,        // single sheet shrinks horizontally (curtains)
         DoubleSwing = 2,    // leaves swing on hinges when facing east/west (gates)
-        StretchVertical = 3 // single sheet shrinks vertically (garage-style remote doors)
+        FreePassage = 3,    // always open
+        StretchVertical = 4 // single sheet shrinks vertically (garage-style remote doors)
     }
 
     // Data-only config carried by DECO door defs. Does NOT rewrite parentDef.thingClass
     // (DECO defs set thingClass explicitly). The trivial CompDoorExpanded exists only so
     // the props can hang off a ThingDef; all reads go through the def's comp properties.
-    // Field names and defaults mirror the original Doors Expanded (jecrell, MIT) comp.
+    //
+    // COMPATIBILITY CONTRACT: this type's full name, its field names, and the DoorType enum
+    // are the original Doors Expanded's XML surface. Third-party patches written against the
+    // old mod parse against this class. Do not rename or remove fields.
     public class CompProperties_DoorExpanded : CompProperties
     {
         public const float DefaultStretchPercent = 0.2f;
 
-        public DoorAnimationType doorType = DoorAnimationType.Standard;
+        public DoorType doorType = DoorType.Standard;
 
         // If true, only one leaf is drawn (single full-width panel).
         public bool singleDoor = false;
@@ -32,6 +37,14 @@ namespace DECO
 
         // If false, a south rotation is forced to north (art has no authored south facing).
         public bool rotatesSouth = true;
+
+        // Original-mod field: marks the door as remote-controllable. Parsed for XML
+        // compatibility; behavior activates with the M2 remote-door milestone.
+        public bool remoteDoor = false;
+
+        // Original-mod field: temperature equalization multiplier for leaky doors such as
+        // curtains. Parsed for XML compatibility; not yet implemented.
+        public float tempEqualizeRate = 1f;
 
         // How far the leaf travels when fully open, in tiles of door width.
         public float doorOpenMultiplier = VisualDoorOffsetEnd;
@@ -72,13 +85,13 @@ namespace DECO
             // to the authored drawSize; open size shrinks one axis to 20%; the offset keeps
             // the non-shrinking edge visually anchored.
             if (parentDef.graphicData is { } graphicData
-                && doorType is DoorAnimationType.Stretch or DoorAnimationType.StretchVertical)
+                && doorType is DoorType.Stretch or DoorType.StretchVertical)
             {
                 if (stretchCloseSize == Vector2.zero)
                     stretchCloseSize = graphicData.drawSize;
                 if (stretchOpenSize == Vector2.zero)
                 {
-                    stretchOpenSize = doorType is DoorAnimationType.Stretch
+                    stretchOpenSize = doorType is DoorType.Stretch
                         ? new Vector2(stretchCloseSize.x * DefaultStretchPercent, stretchCloseSize.y)
                         : new Vector2(stretchCloseSize.x, stretchCloseSize.y * DefaultStretchPercent);
                 }

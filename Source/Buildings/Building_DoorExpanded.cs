@@ -1,9 +1,8 @@
-using System;
 using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace DECO
+namespace DoorsExpanded
 {
     // Multi-tile door with a custom draw. Vanilla Building_MultiTileDoor draws each leaf at
     // half width and splits two copies from center, which only suits art authored as a
@@ -19,9 +18,16 @@ namespace DECO
     {
         private CompProperties_DoorExpanded propsInt;
 
+        // Tolerant of a missing comp: save-swapping between mods can briefly pair this class
+        // with a def that lacks it (e.g. a def edited mid-save). Fall back to defaults
+        // (Standard two-leaf slide) rather than throwing every draw frame.
+        private static readonly CompProperties_DoorExpanded DefaultProps = new();
+
         public CompProperties_DoorExpanded Props =>
-            propsInt ??= def.GetCompProperties<CompProperties_DoorExpanded>()
-                ?? throw new Exception($"{def.defName}: missing CompProperties_DoorExpanded");
+            propsInt ??= def.GetCompProperties<CompProperties_DoorExpanded>() ?? DefaultProps;
+
+        // FreePassage doors are permanently open (vanilla hook).
+        protected override bool AlwaysOpen => Props.doorType == DoorType.FreePassage;
 
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
@@ -40,7 +46,7 @@ namespace DECO
             {
                 var size = def.Size;
                 if ((size.x == 1 && size.z == 1)
-                    || props.doorType is DoorAnimationType.Stretch or DoorAnimationType.StretchVertical)
+                    || props.doorType is DoorType.Stretch or DoorType.StretchVertical)
                 {
                     rot = DoorUtility.DoorRotationAt(loc, map, preferFences: false);
                 }
@@ -102,12 +108,12 @@ namespace DECO
             switch (props.doorType)
             {
                 // Stretch and StretchVertical differ only in stretchOpenSize's default.
-                case DoorAnimationType.Stretch:
-                case DoorAnimationType.StretchVertical:
+                case DoorType.Stretch:
+                case DoorType.StretchVertical:
                     DrawStretchParams(def, props, rotation, openPct, flipped,
                         out mesh, out rotQuat, out offsetVector, out scaleVector);
                     break;
-                case DoorAnimationType.DoubleSwing:
+                case DoorType.DoubleSwing:
                     DrawDoubleSwingParams(def, props, drawPos, rotation, openPct, flipped,
                         out mesh, out rotQuat, out offsetVector, out scaleVector);
                     break;

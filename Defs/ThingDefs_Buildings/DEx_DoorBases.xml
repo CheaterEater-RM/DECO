@@ -15,7 +15,7 @@
   </ThingDef>
 
   <!--
-  Multi-tile door base. DECO.Building_DoorExpanded (a Building_MultiTileDoor subclass
+  Multi-tile door base. DoorsExpanded.Building_DoorExpanded (a Building_MultiTileDoor subclass
   with a custom full-width slide draw). The DECO _Mover art is authored at full door
   width, which vanilla Building_MultiTileDoor would squish to half and double-draw;
   the subclass draws the full-width leaf/leaves itself. Behaviour (pathing, regions,
@@ -25,10 +25,10 @@
   (not Blueprint_Door, which is 1x1 only), useBlueprintGraphicAsGhost with a
   closed-composite blueprint graphic, rotatable, PlaceWorker_MultiCellDoor.
   Concrete defs must supply graphicData, blueprintGraphicData, size, uiIconPath,
-  and a DECO.CompProperties_DoorExpanded comp.
+  and a DoorsExpanded.CompProperties_DoorExpanded comp.
   -->
   <ThingDef Name="DExMultiDoorBase" ParentName="DoorBase" Abstract="True">
-    <thingClass>DECO.Building_DoorExpanded</thingClass>
+    <thingClass>DoorsExpanded.Building_DoorExpanded</thingClass>
     <designationCategory>Structure</designationCategory>
     <uiOrder>2016</uiOrder>
     <rotatable>true</rotatable>

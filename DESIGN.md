@@ -9,12 +9,16 @@ The authoritative rewrite design currently lives in `DoorsExpanded_Rewrite_DESIG
 - M2: remote doors and buttons
 - M3: polish, CE audit, docs, and save-behavior notes
 
-Scaffold identity:
+Identity:
 
 - Display name: Doors Expanded Continued Overhaul
-- Codespace / assembly / namespace: DECO
+- Codespace / assembly: DECO
+- C# namespace: DoorsExpanded (save interchangeability with the original mod; see AGENTS.md)
 - Package ID: CheaterEater.DECO
 - Harmony ID: com.cheatereater.deco
 - Target: RimWorld 1.6, net48
 
-No implementation code has been added in this scaffold.
+Save interchangeability: DECO uses the original Doors Expanded's defNames (PH_*/Heron*)
+and thing class names so saves swap freely in both directions between the two mods.
+Those names are frozen API (never rename); the two mods cannot be loaded together.
+The implementation is entirely DECO's — only the names are shared.

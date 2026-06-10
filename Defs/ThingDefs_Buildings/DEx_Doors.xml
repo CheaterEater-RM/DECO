@@ -6,7 +6,7 @@
   Art reused from Doors Expanded (jecrell, MIT).
 
   1x1 doors  : vanilla Building_Door, pure XML.
-  Multi-tile : DECO.Building_DoorExpanded (Building_MultiTileDoor subclass) with a
+  Multi-tile : DoorsExpanded.Building_DoorExpanded (Building_MultiTileDoor subclass) with a
                custom full-width slide draw, because the reused _Mover art is authored
                at full door width and vanilla's half-width two-leaf draw breaks it.
 
@@ -20,7 +20,7 @@
   <!-- ================= Large doors ================= -->
 
   <ThingDef ParentName="DExMultiDoorBase">
-    <defName>DEx_DoorDouble</defName>
+    <defName>PH_DoorDouble</defName>
     <label>door (2x1)</label>
     <description>Divides rooms. A wide manually-operated door spanning two tiles. Requires adjacent walls to function.</description>
     <size>(2,1)</size>
@@ -47,14 +47,14 @@
       </blueprintGraphicData>
     </building>
     <comps>
-      <li Class="DECO.CompProperties_DoorExpanded">
+      <li Class="DoorsExpanded.CompProperties_DoorExpanded">
         <doorType>Standard</doorType>
       </li>
     </comps>
   </ThingDef>
 
   <ThingDef ParentName="DExMultiDoorBase">
-    <defName>DEx_DoorTriple</defName>
+    <defName>PH_DoorTriple</defName>
     <label>door (3x1)</label>
     <description>Divides rooms. A wide manually-operated door spanning three tiles. Requires adjacent walls to function.</description>
     <size>(3,1)</size>
@@ -81,7 +81,7 @@
       </blueprintGraphicData>
     </building>
     <comps>
-      <li Class="DECO.CompProperties_DoorExpanded">
+      <li Class="DoorsExpanded.CompProperties_DoorExpanded">
         <doorType>Standard</doorType>
       </li>
     </comps>
@@ -90,12 +90,12 @@
   <!-- ================= Curtains (cloth, no research, NOT minifiable - they're doors) ================= -->
 
   <ThingDef ParentName="DExDoorBase">
-    <defName>DEx_CurtainTribal</defName>
+    <defName>HeronCurtainTribal</defName>
     <label>curtain</label>
     <description>Divides rooms. Curtains open much faster than standard doors, but are flammable and offer no airtight seal.</description>
     <!-- Expanded class for the Stretch animation: a single sheet that bunches to one side.
          Vanilla Building_Door would draw the full-width sheet twice, sliding apart. -->
-    <thingClass>DECO.Building_DoorExpanded</thingClass>
+    <thingClass>DoorsExpanded.Building_DoorExpanded</thingClass>
     <size>(1,1)</size>
     <rotatable>false</rotatable>
     <statBases>
@@ -127,7 +127,7 @@
       <alwaysExchangeVacuum>true</alwaysExchangeVacuum>
     </building>
     <comps>
-      <li Class="DECO.CompProperties_DoorExpanded">
+      <li Class="DoorsExpanded.CompProperties_DoorExpanded">
         <doorType>Stretch</doorType>
         <singleDoor>true</singleDoor>
       </li>
@@ -135,7 +135,7 @@
   </ThingDef>
 
   <ThingDef ParentName="DExMultiDoorBase">
-    <defName>DEx_CurtainDouble</defName>
+    <defName>HeronCurtainTribalDouble</defName>
     <label>curtain (2x1)</label>
     <description>Divides rooms. A wide curtain spanning two tiles. Opens much faster than standard doors, but is flammable and offers no airtight seal.</description>
     <size>(2,1)</size>
@@ -172,7 +172,7 @@
       </blueprintGraphicData>
     </building>
     <comps>
-      <li Class="DECO.CompProperties_DoorExpanded">
+      <li Class="DoorsExpanded.CompProperties_DoorExpanded">
         <doorType>Stretch</doorType>
         <singleDoor>true</singleDoor>
         <stretchOpenSize>(0.2,1)</stretchOpenSize> <!-- shrink to same size as shrunken 1x1 curtain -->
@@ -181,7 +181,7 @@
   </ThingDef>
 
   <ThingDef ParentName="DExMultiDoorBase">
-    <defName>DEx_CurtainTriple</defName>
+    <defName>HeronCurtainTribalTriple</defName>
     <label>curtain (3x1)</label>
     <description>Divides rooms. A wide curtain spanning three tiles. Opens much faster than standard doors, but is flammable and offers no airtight seal.</description>
     <size>(3,1)</size>
@@ -218,7 +218,7 @@
       </blueprintGraphicData>
     </building>
     <comps>
-      <li Class="DECO.CompProperties_DoorExpanded">
+      <li Class="DoorsExpanded.CompProperties_DoorExpanded">
         <doorType>Stretch</doorType>
         <singleDoor>true</singleDoor>
         <stretchOpenSize>(0.2,1)</stretchOpenSize> <!-- shrink to same size as shrunken 1x1 curtain -->
@@ -229,9 +229,12 @@
   <!-- ================= Jail door (Smithing) ================= -->
 
   <ThingDef ParentName="DExDoorBase">
-    <defName>DEx_DoorJail</defName>
+    <defName>PH_DoorJail</defName>
     <label>jail door</label>
     <description>A sliding jail cell door with strong bars.</description>
+    <!-- Expanded class with the original's config (single panel, 0.8 travel) — also what
+         old saves recorded for this door. -->
+    <thingClass>DoorsExpanded.Building_DoorExpanded</thingClass>
     <size>(1,1)</size>
     <rotatable>false</rotatable>
     <statBases>
@@ -258,9 +261,23 @@
     <uiIconPath>Things/Building/DEx/Door/JailCell_Mover</uiIconPath>
     <building>
       <isStuffableAirtight>true</isStuffableAirtight>
+      <blueprintClass>Blueprint_Build</blueprintClass>
+      <blueprintGraphicData>
+        <texPath>Things/Building/DEx/Door/JailCell_Blueprint</texPath>
+        <graphicClass>Graphic_Single</graphicClass>
+        <drawSize>(1,1)</drawSize>
+      </blueprintGraphicData>
       <soundDoorOpenManual>DEx_JailDoorOpen</soundDoorOpenManual>
       <soundDoorCloseManual>DEx_JailDoorClose</soundDoorCloseManual>
     </building>
+    <comps>
+      <li Class="DoorsExpanded.CompProperties_DoorExpanded">
+        <doorType>Standard</doorType>
+        <singleDoor>true</singleDoor>
+        <doorOpenMultiplier>0.8</doorOpenMultiplier>
+        <rotatesSouth>false</rotatesSouth>
+      </li>
+    </comps>
     <researchPrerequisites>
       <li>Smithing</li>
     </researchPrerequisites>
@@ -269,7 +286,7 @@
   <!-- ================= Gate (Smithing) ================= -->
 
   <ThingDef ParentName="DExMultiDoorBase">
-    <defName>DEx_Gate</defName>
+    <defName>PH_GateDoubleThick</defName>
     <label>gate</label>
     <description>A wide, heavy gate spanning two tiles. Requires adjacent walls to function.</description>
     <size>(2,1)</size>
@@ -296,7 +313,7 @@
       </blueprintGraphicData>
     </building>
     <comps>
-      <li Class="DECO.CompProperties_DoorExpanded">
+      <li Class="DoorsExpanded.CompProperties_DoorExpanded">
         <doorType>DoubleSwing</doorType>
         <fixedPerspective>true</fixedPerspective>
         <rotatesSouth>false</rotatesSouth>
@@ -311,12 +328,12 @@
   <!-- Decorative frames/async leaves are a later milestone. These ship as sliding doors. -->
 
   <ThingDef ParentName="DExDoorBase">
-    <defName>DEx_BlastDoorSingle</defName>
+    <defName>PH_DoorBlastSingle</defName>
     <label>blast door (1x1)</label>
     <description>A heavy door that is far more resilient to damage.</description>
-    <!-- 1x1 but uses the expanded draw class so it gets the static frame (the housing the
-         single panel slides within). singleDoor => only one moving leaf is drawn. -->
-    <thingClass>DECO.Building_DoorExpanded</thingClass>
+    <!-- Remote-class door (stub until M2), matching the original and old saves. Draws via
+         the expanded base: two mini leaves sliding inside the static frame housing. -->
+    <thingClass>DoorsExpanded.Building_DoorRemote</thingClass>
     <size>(1,1)</size>
     <rotatable>false</rotatable>
     <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
@@ -355,9 +372,10 @@
       <soundDoorCloseManual>DEx_BlastDoorClose</soundDoorCloseManual>
     </building>
     <comps>
-      <li Class="DECO.CompProperties_DoorExpanded">
+      <li Class="DoorsExpanded.CompProperties_DoorExpanded">
         <doorType>Standard</doorType>
         <rotatesSouth>false</rotatesSouth>
+        <remoteDoor>true</remoteDoor>
         <doorFrame>
           <texPath>Things/Building/DEx/Door/DoorBlastDoorSingle</texPath>
           <graphicClass>Graphic_Single</graphicClass>
@@ -375,9 +393,10 @@
   </ThingDef>
 
   <ThingDef ParentName="DExMultiDoorBase">
-    <defName>DEx_BlastDoor</defName>
+    <defName>PH_DoorBlastDoor</defName>
     <label>blast door (2x1)</label>
     <description>A heavy pair of doors that are far more resilient to damage. Requires adjacent walls to function.</description>
+    <thingClass>DoorsExpanded.Building_DoorRemote</thingClass>
     <size>(2,1)</size>
     <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
     <statBases>
@@ -413,10 +432,11 @@
       </blueprintGraphicData>
     </building>
     <comps>
-      <li Class="DECO.CompProperties_DoorExpanded">
+      <li Class="DoorsExpanded.CompProperties_DoorExpanded">
         <doorType>Standard</doorType>
         <fixedPerspective>true</fixedPerspective>
         <rotatesSouth>false</rotatesSouth>
+        <remoteDoor>true</remoteDoor>
         <doorAsync>
           <texPath>Things/Building/DEx/Door/DoorBlastDoor_MoverAsync</texPath>
           <graphicClass>Graphic_Multi</graphicClass>
@@ -447,9 +467,10 @@
   </ThingDef>
 
   <ThingDef ParentName="DExMultiDoorBase">
-    <defName>DEx_BlastDoorThick</defName>
+    <defName>PH_DoorThickBlastDoor</defName>
     <label>blast door (3x2)</label>
     <description>An enormous, heavily reinforced pair of blast doors spanning a 3x2 area. Requires adjacent walls to function.</description>
+    <thingClass>DoorsExpanded.Building_DoorRemote</thingClass>
     <size>(3,2)</size>
     <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
     <statBases>
@@ -485,10 +506,11 @@
       </blueprintGraphicData>
     </building>
     <comps>
-      <li Class="DECO.CompProperties_DoorExpanded">
+      <li Class="DoorsExpanded.CompProperties_DoorExpanded">
         <doorType>Standard</doorType>
         <fixedPerspective>true</fixedPerspective>
         <rotatesSouth>false</rotatesSouth>
+        <remoteDoor>true</remoteDoor>
         <doorAsync>
           <texPath>Things/Building/DEx/Door/DoorBlastDoor_MoverAsync</texPath>
           <graphicClass>Graphic_Multi</graphicClass>
@@ -514,6 +536,109 @@
     </comps>
     <researchPrerequisites>
       <li>Machining</li>
+    </researchPrerequisites>
+    <constructionSkillPrerequisite>6</constructionSkillPrerequisite>
+  </ThingDef>
+
+  <!-- ================= Wide autodoors (Autodoors research) ================= -->
+  <!-- Remote-class doors (stub until M2), matching the original. -->
+
+  <ThingDef ParentName="DExMultiDoorBase">
+    <defName>PH_AutodoorDouble</defName>
+    <label>autodoor (2x1)</label>
+    <description>Divides rooms. A wide powered door spanning two tiles that opens without slowing people down. Requires adjacent walls to function.</description>
+    <thingClass>DoorsExpanded.Building_DoorRemote</thingClass>
+    <size>(2,1)</size>
+    <statBases>
+      <Mass>40</Mass>
+      <MaxHitPoints>320</MaxHitPoints>
+      <WorkToBuild>2200</WorkToBuild>
+    </statBases>
+    <costList>
+      <Steel>80</Steel>
+      <ComponentIndustrial>4</ComponentIndustrial>
+    </costList>
+    <costStuffCount>50</costStuffCount>
+    <graphicData>
+      <texPath>Things/Building/DEx/Door/AutodoorDouble_Mover</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(2,1)</drawSize>
+      <damageData>
+        <enabled>false</enabled>
+      </damageData>
+    </graphicData>
+    <uiIconPath>Things/Building/DEx/Door/AutodoorDouble_MenuIcon</uiIconPath>
+    <building>
+      <isStuffableAirtight>true</isStuffableAirtight>
+      <blueprintGraphicData>
+        <texPath>Things/Building/DEx/Door/DoorDouble_Blueprint</texPath>
+        <graphicClass>Graphic_Single</graphicClass>
+        <drawSize>(2,1)</drawSize>
+      </blueprintGraphicData>
+    </building>
+    <comps>
+      <li Class="DoorsExpanded.CompProperties_DoorExpanded">
+        <doorType>Standard</doorType>
+        <remoteDoor>true</remoteDoor>
+      </li>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>100</basePowerConsumption>
+      </li>
+      <li Class="CompProperties_Breakdownable"/>
+    </comps>
+    <researchPrerequisites>
+      <li>Autodoors</li>
+    </researchPrerequisites>
+    <constructionSkillPrerequisite>6</constructionSkillPrerequisite>
+  </ThingDef>
+
+  <ThingDef ParentName="DExMultiDoorBase">
+    <defName>PH_AutodoorTriple</defName>
+    <label>autodoor (3x1)</label>
+    <description>Divides rooms. A wide powered door spanning three tiles that opens without slowing people down. Requires adjacent walls to function.</description>
+    <thingClass>DoorsExpanded.Building_DoorRemote</thingClass>
+    <size>(3,1)</size>
+    <statBases>
+      <Mass>60</Mass>
+      <MaxHitPoints>480</MaxHitPoints>
+      <WorkToBuild>3300</WorkToBuild>
+    </statBases>
+    <costList>
+      <Steel>120</Steel>
+      <ComponentIndustrial>6</ComponentIndustrial>
+    </costList>
+    <costStuffCount>75</costStuffCount>
+    <graphicData>
+      <texPath>Things/Building/DEx/Door/AutodoorTriple_Mover</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(3,1)</drawSize>
+      <damageData>
+        <enabled>false</enabled>
+      </damageData>
+    </graphicData>
+    <uiIconPath>Things/Building/DEx/Door/AutodoorTriple_MenuIcon</uiIconPath>
+    <building>
+      <isStuffableAirtight>true</isStuffableAirtight>
+      <blueprintGraphicData>
+        <texPath>Things/Building/DEx/Door/DoorTriple_Blueprint</texPath>
+        <graphicClass>Graphic_Single</graphicClass>
+        <drawSize>(3,1)</drawSize>
+      </blueprintGraphicData>
+    </building>
+    <comps>
+      <li Class="DoorsExpanded.CompProperties_DoorExpanded">
+        <doorType>Standard</doorType>
+        <remoteDoor>true</remoteDoor>
+      </li>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>150</basePowerConsumption>
+      </li>
+      <li Class="CompProperties_Breakdownable"/>
+    </comps>
+    <researchPrerequisites>
+      <li>Autodoors</li>
     </researchPrerequisites>
     <constructionSkillPrerequisite>6</constructionSkillPrerequisite>
   </ThingDef>

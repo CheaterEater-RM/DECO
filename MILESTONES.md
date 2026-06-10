@@ -56,6 +56,23 @@ Fixed after second in-game test (2026-06-10), all by matching the original sourc
   non-rotatable 1x1/stretch doors auto-rotate; `rotatesSouth=false` doors
   (gate, blast doors) force south to north.
 
+Save interchangeability pass (2026-06-10, user decision):
+
+- Adopted the original Doors Expanded's save-visible names so saves swap freely both
+  ways with zero migration code: namespace `DoorsExpanded`, original class names
+  (`Building_DoorExpanded`, stub `Building_DoorRemote` until M2), original defNames
+  (`PH_*`/`Heron*`), original comp field names + `DoorType` enum (incl. parse-only
+  `remoteDoor`/`tempEqualizeRate` and a working `FreePassage` via `AlwaysOpen`).
+- Jail door moved to the expanded class with the original config; blast doors moved to
+  the `Building_DoorRemote` stub (what old saves recorded); added `PH_AutodoorDouble`
+  and `PH_AutodoorTriple` for catalogue parity.
+- `About.xml` declares `incompatibleWith jecrell.doorsexpanded` (names collide).
+- These names are frozen API — documented in AGENTS.md's Save Interchangeability
+  Contract. Old DECO test saves (DEx_*/DECO.*) lose their built doors once.
+- M2 must use the original's remote defNames, `Building_DoorRemoteButton`, and scribe
+  field names (`button`, `securedRemotely`, `linkedDoors`, `buttonOn`,
+  `needsToBeSwitched`) so old remote state migrates when M2 lands.
+
 Remaining verification (in-game):
 
 - Confirm zero startup errors in `Player.log`.

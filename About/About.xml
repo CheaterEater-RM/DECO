@@ -27,4 +27,10 @@
     <li>Ludeon.RimWorld.Anomaly</li>
     <li>Ludeon.RimWorld.Odyssey</li>
   </loadAfter>
+
+  <!-- DECO owns the original Doors Expanded's internal names so saves swap freely between
+       the two mods. Loading both at once duplicates those names and breaks. -->
+  <incompatibleWith>
+    <li>jecrell.doorsexpanded</li>
+  </incompatibleWith>
 </ModMetaData>
