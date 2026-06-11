@@ -7,7 +7,7 @@ namespace DoorsExpanded
 {
     public class Building_DoorRemoteButton : Building, IRenameable
     {
-        private List<Building_DoorRemote> linkedDoors = new();
+        private List<Building_Door> linkedDoors = new();
         private CompPowerTrader powerComp;
         private bool buttonOn;
         private bool needsToBeSwitched;
@@ -26,7 +26,7 @@ namespace DoorsExpanded
         public override string LabelNoCount =>
             customLabel.NullOrEmpty() ? base.LabelNoCount : customLabel;
 
-        public List<Building_DoorRemote> LinkedDoors
+        public List<Building_Door> LinkedDoors
         {
             get
             {
@@ -71,7 +71,8 @@ namespace DoorsExpanded
             if (!respawningAfterLoad)
             {
                 var pendingDoor = map.GetComponent<MapComponent_RemoteAutoLink>()?.ClaimDoorFor(this);
-                pendingDoor?.LinkToButton(this);
+                if (pendingDoor != null)
+                    RemoteDoorUtility.SetButton(pendingDoor, this);
             }
         }
 
@@ -84,7 +85,7 @@ namespace DoorsExpanded
             Scribe_Values.Look(ref buttonOn, "buttonOn", false);
             Scribe_Values.Look(ref needsToBeSwitched, "needsToBeSwitched", false);
             Scribe_Values.Look(ref customLabel, "customLabel");
-            linkedDoors ??= new List<Building_DoorRemote>();
+            linkedDoors ??= new List<Building_Door>();
         }
 
         public override void DrawExtraSelectionOverlays()
@@ -120,7 +121,7 @@ namespace DoorsExpanded
             };
         }
 
-        public void Notify_Linked(Building_DoorRemote door)
+        public void Notify_Linked(Building_Door door)
         {
             if (door == null)
                 return;
@@ -128,10 +129,10 @@ namespace DoorsExpanded
             ScrubLinkedDoors();
             if (!linkedDoors.Contains(door))
                 linkedDoors.Add(door);
-            door.Notify_RemoteStateChanged();
+            RemoteDoorUtility.NotifyRemoteStateChanged(door);
         }
 
-        public void Notify_Unlinked(Building_DoorRemote door)
+        public void Notify_Unlinked(Building_Door door)
         {
             if (linkedDoors == null)
                 return;
@@ -179,13 +180,16 @@ namespace DoorsExpanded
         private void ApplyStateToLinkedDoors()
         {
             foreach (var linkedDoor in LinkedDoors)
-                linkedDoor.Notify_RemoteStateChanged(buttonEdge: true);
+                RemoteDoorUtility.NotifyRemoteStateChanged(linkedDoor, buttonEdge: true);
         }
 
         private void ScrubLinkedDoors()
         {
-            linkedDoors ??= new List<Building_DoorRemote>();
-            linkedDoors.RemoveAll(door => door == null || !door.Spawned || door.Button != this);
+            linkedDoors ??= new List<Building_Door>();
+            linkedDoors.RemoveAll(door => door == null
+                || !door.Spawned
+                || !RemoteDoorUtility.CanHaveRemoteControls(door)
+                || RemoteDoorUtility.GetButton(door) != this);
         }
     }
 }

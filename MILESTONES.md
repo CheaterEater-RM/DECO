@@ -219,6 +219,14 @@ Implemented (C# + XML, pending in-game validation):
   off, `PawnCanOpen` returns false. The button/lever state still owns open/close.
 - Added `PH_DoorButton`, `PH_DoorLever`, and `PH_DoorRemoteSingle/Double/Triple`
   defs under Microelectronics, plus keyed UI labels.
+- Vanilla `Autodoor` (1x1) and Anomaly `SecurityDoor` can use DECO remote
+  buttons/levers without replacing vanilla defs. A narrow `Building_Door.GetGizmos`
+  patch adds the remote gizmos only to those two vanilla defs;
+  `MapComponent_RemoteDoorLinks` stores the extra vanilla-door link/security state;
+  the existing button-side `linkedDoors` list now stores `Building_Door` references so
+  one controller can drive DECO remote doors, vanilla autodoors, and vanilla security
+  doors together. The door-side build-button auto-link path also works for those
+  vanilla doors.
 
 Remaining verification (in-game):
 
@@ -232,6 +240,10 @@ Remaining verification (in-game):
   hold-open state behind.
 - Verify power loss prevents powered remote actuation, and the door catches up
   to the controller state once power returns.
+- Verify vanilla autodoors/security doors link manually and through the door-side
+  build-button command, save/load their link and secured state, block pawns only while
+  remotely secured and the controller is off, and still count normally for Anomaly
+  containment where applicable.
 
 ### M1 - Animated doors
 
@@ -259,7 +271,7 @@ Dependencies: M2 remote doors validated.
 - Add clearer lines for remote switches to doors (completed)
 - Check containment with Anomaly (audited 2026-06-10, no code change needed — see below)
 - Ensure that creatures and anything else can't get through (resolved by inheritance — see below)
-- Allow Rimworld security door to use buttons
+- Allow vanilla security door and 1x1 autodoor to use buttons (implemented 2026-06-11; pending in-game validation)
 - Balance and tuning: costs, HP, opening/closing speeds
 
 ### Anomaly Containment Audit (2026-06-10)

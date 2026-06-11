@@ -6,7 +6,7 @@ using Verse;
 namespace DoorsExpanded
 {
     // Transient, session-only convenience tracker for the "build button from door" QoL
-    // feature. When the player clicks a build-button gizmo on a Building_DoorRemote, that
+    // feature. When the player clicks a build-button gizmo on a remote-capable door, that
     // door is "armed" here. The next matching remote-control blueprint placed by vanilla's
     // designator is then recorded here and carried through blueprint -> frame -> finished
     // building so the final button links to the door that started the build.
@@ -20,11 +20,11 @@ namespace DoorsExpanded
         // cancelled placement doesn't quietly capture an unrelated later build command.
         private const int ArmExpiryTicks = 2500;
 
-        private Building_DoorRemote armedDoor;
+        private Building_Door armedDoor;
         private ThingDef armedControlDef;
         private int armedTick;
         private List<Thing> pendingThings = new();
-        private List<Building_DoorRemote> pendingDoors = new();
+        private List<Building_Door> pendingDoors = new();
         private readonly List<Frame> completingFrames = new();
 
         public MapComponent_RemoteAutoLink(Map map) : base(map)
@@ -43,7 +43,7 @@ namespace DoorsExpanded
                 && typeof(Building_DoorRemoteButton).IsAssignableFrom(def.thingClass);
         }
 
-        public void Arm(Building_DoorRemote door, ThingDef controlDef)
+        public void Arm(Building_Door door, ThingDef controlDef)
         {
             // Overwrite any previous unplaced arm: only the most recent door-side build
             // command should be waiting for the next matching blueprint.
@@ -82,7 +82,7 @@ namespace DoorsExpanded
                 completingFrames.Add(frame);
         }
 
-        public Building_DoorRemote ClaimDoorFor(Building_DoorRemoteButton button)
+        public Building_Door ClaimDoorFor(Building_DoorRemoteButton button)
         {
             if (button == null)
                 return null;
@@ -123,12 +123,12 @@ namespace DoorsExpanded
             Scribe_Collections.Look(ref pendingThings, "pendingThings", LookMode.Reference);
             Scribe_Collections.Look(ref pendingDoors, "pendingDoors", LookMode.Reference);
             pendingThings ??= new List<Thing>();
-            pendingDoors ??= new List<Building_DoorRemote>();
+            pendingDoors ??= new List<Building_Door>();
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
                 TrimMismatchedPendingLists();
         }
 
-        private void RegisterPendingThing(Thing thing, Building_DoorRemote door)
+        private void RegisterPendingThing(Thing thing, Building_Door door)
         {
             if (thing == null || !IsValidDoor(door))
                 return;
@@ -159,9 +159,12 @@ namespace DoorsExpanded
             return armedControlDef != null && IsRemoteControlDef(armedControlDef);
         }
 
-        private bool IsValidDoor(Building_DoorRemote door)
+        private bool IsValidDoor(Building_Door door)
         {
-            return door != null && door.Spawned && door.Map == map;
+            return door != null
+                && door.Spawned
+                && door.Map == map
+                && RemoteDoorUtility.CanHaveRemoteControls(door);
         }
 
         private bool PendingThingMatchesButton(Thing pendingThing, Building_DoorRemoteButton button)
