@@ -1,51 +1,209 @@
+using System.Collections.Generic;
+using RimWorld;
+using UnityEngine;
 using Verse;
 
 namespace DoorsExpanded
 {
     // Transient, session-only convenience tracker for the "build button from door" QoL
     // feature. When the player clicks a build-button gizmo on a Building_DoorRemote, that
-    // door is "armed" here. The next remote button to finish construction (see
-    // Building_DoorRemoteButton.SpawnSetup) claims the armed door and auto-links to it.
+    // door is "armed" here. The next matching remote-control blueprint placed by vanilla's
+    // designator is then recorded here and carried through blueprint -> frame -> finished
+    // building so the final button links to the door that started the build.
     //
-    // Deliberately NOT saved: the blueprint->frame->building chain can't carry an instance
-    // reference, and persisting a half-finished intent across saves adds save-compat risk for
-    // a pure convenience. If a save/load happens mid-placement the arm is simply lost and the
-    // player falls back to the manual "Connect remote" gizmo. The arm also expires after a
-    // generous window so a forgotten or cancelled build never silently captures an unrelated
-    // future button.
+    // The temporary arm is deliberately not saved, but pending blueprint/frame links are
+    // scribed by reference so saving after placement and before construction completes keeps
+    // the auto-link intent.
     public class MapComponent_RemoteAutoLink : MapComponent
     {
-        // ~half an in-game day; long enough for a build to be queued and completed, short
-        // enough that a stale arm doesn't linger for the rest of the game.
-        private const int ArmExpiryTicks = 30000;
+        // Long enough to place a blueprint after opening the door gizmo, short enough that a
+        // cancelled placement doesn't quietly capture an unrelated later build command.
+        private const int ArmExpiryTicks = 2500;
 
         private Building_DoorRemote armedDoor;
+        private ThingDef armedControlDef;
         private int armedTick;
+        private List<Thing> pendingThings = new();
+        private List<Building_DoorRemote> pendingDoors = new();
+        private readonly List<Frame> completingFrames = new();
 
         public MapComponent_RemoteAutoLink(Map map) : base(map)
         {
         }
 
-        public void Arm(Building_DoorRemote door)
+        public static bool IsRemoteControlDef(ThingDef def)
         {
-            // Overwrite any previous arm: only the most recently requested door matters, which
-            // gives the "link to the last built one" behaviour.
+            return def != null
+                && !def.defName.NullOrEmpty()
+                && def.category == ThingCategory.Building
+                && def.BuildableByPlayer
+                && !def.IsBlueprint
+                && !def.IsFrame
+                && def.thingClass != null
+                && typeof(Building_DoorRemoteButton).IsAssignableFrom(def.thingClass);
+        }
+
+        public void Arm(Building_DoorRemote door, ThingDef controlDef)
+        {
+            // Overwrite any previous unplaced arm: only the most recent door-side build
+            // command should be waiting for the next matching blueprint.
             armedDoor = door;
+            armedControlDef = controlDef;
             armedTick = Find.TickManager.TicksGame;
         }
 
-        // Returns the still-valid armed door and disarms, or null if none/expired/invalid.
-        public Building_DoorRemote ClaimArmedDoor()
+        public void RegisterBlueprintFromArm(Blueprint_Build blueprint, ThingDef controlDef)
         {
-            var door = armedDoor;
-            armedDoor = null;
+            if (blueprint == null || controlDef != armedControlDef || !IsValidArmedDoor())
+                return;
 
-            if (door == null || !door.Spawned || door.Map != map)
+            RegisterPendingThing(blueprint, armedDoor);
+            ClearArm();
+        }
+
+        public void TransferPendingThing(Thing oldThing, Thing newThing)
+        {
+            if (oldThing == null || newThing == null)
+                return;
+
+            for (var i = 0; i < pendingThings.Count; i++)
+            {
+                if (pendingThings[i] == oldThing)
+                {
+                    pendingThings[i] = newThing;
+                    return;
+                }
+            }
+        }
+
+        public void NotifyFrameCompleting(Frame frame)
+        {
+            if (frame != null && pendingThings.Contains(frame) && !completingFrames.Contains(frame))
+                completingFrames.Add(frame);
+        }
+
+        public Building_DoorRemote ClaimDoorFor(Building_DoorRemoteButton button)
+        {
+            if (button == null)
                 return null;
+
+            for (var i = pendingThings.Count - 1; i >= 0; i--)
+            {
+                var pendingThing = pendingThings[i];
+                var door = pendingDoors[i];
+
+                if (!IsValidDoor(door))
+                {
+                    RemovePendingAt(i);
+                    continue;
+                }
+
+                if (PendingThingMatchesButton(pendingThing, button))
+                {
+                    RemovePendingAt(i);
+                    if (pendingThing is Frame frame)
+                        completingFrames.Remove(frame);
+                    return door;
+                }
+            }
+
+            if (button.def == armedControlDef && IsValidArmedDoor())
+            {
+                var door = armedDoor;
+                ClearArm();
+                return door;
+            }
+
+            return null;
+        }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Collections.Look(ref pendingThings, "pendingThings", LookMode.Reference);
+            Scribe_Collections.Look(ref pendingDoors, "pendingDoors", LookMode.Reference);
+            pendingThings ??= new List<Thing>();
+            pendingDoors ??= new List<Building_DoorRemote>();
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+                TrimMismatchedPendingLists();
+        }
+
+        private void RegisterPendingThing(Thing thing, Building_DoorRemote door)
+        {
+            if (thing == null || !IsValidDoor(door))
+                return;
+
+            var existingIndex = pendingThings.IndexOf(thing);
+            if (existingIndex >= 0)
+            {
+                pendingDoors[existingIndex] = door;
+                return;
+            }
+
+            pendingThings.Add(thing);
+            pendingDoors.Add(door);
+        }
+
+        private bool IsValidArmedDoor()
+        {
             if (Find.TickManager.TicksGame - armedTick > ArmExpiryTicks)
-                return null;
+            {
+                ClearArm();
+                return false;
+            }
+            if (!IsValidDoor(armedDoor))
+            {
+                ClearArm();
+                return false;
+            }
+            return armedControlDef != null && IsRemoteControlDef(armedControlDef);
+        }
 
-            return door;
+        private bool IsValidDoor(Building_DoorRemote door)
+        {
+            return door != null && door.Spawned && door.Map == map;
+        }
+
+        private bool PendingThingMatchesButton(Thing pendingThing, Building_DoorRemoteButton button)
+        {
+            if (pendingThing == null || pendingThing.Position != button.Position || pendingThing.Rotation != button.Rotation)
+                return false;
+
+            if (pendingThing.Destroyed && (pendingThing is not Frame frame || !completingFrames.Contains(frame)))
+                return false;
+
+            if (pendingThing == button)
+                return true;
+
+            if (pendingThing is Blueprint_Build blueprint)
+                return blueprint.BuildDef == button.def;
+
+            if (pendingThing is Frame pendingFrame)
+                return pendingFrame.BuildDef == button.def;
+
+            return false;
+        }
+
+        private void ClearArm()
+        {
+            armedDoor = null;
+            armedControlDef = null;
+            armedTick = 0;
+        }
+
+        private void RemovePendingAt(int index)
+        {
+            pendingThings.RemoveAt(index);
+            pendingDoors.RemoveAt(index);
+        }
+
+        private void TrimMismatchedPendingLists()
+        {
+            var count = Mathf.Min(pendingThings.Count, pendingDoors.Count);
+            if (pendingThings.Count > count)
+                pendingThings.RemoveRange(count, pendingThings.Count - count);
+            if (pendingDoors.Count > count)
+                pendingDoors.RemoveRange(count, pendingDoors.Count - count);
         }
     }
 }

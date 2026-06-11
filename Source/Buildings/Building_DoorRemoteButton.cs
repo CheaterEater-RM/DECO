@@ -66,13 +66,12 @@ namespace DoorsExpanded
             base.SpawnSetup(map, respawningAfterLoad);
             powerComp = GetComp<CompPowerTrader>();
 
-            // QoL auto-link: if this button was just built via a door's "build button" gizmo,
-            // claim the armed door and link it. Construction-only (not on load), since the arm
-            // is transient session state.
+            // QoL auto-link: if this button was built from a door-side build gizmo, claim the
+            // pending blueprint/frame link that was registered during placement.
             if (!respawningAfterLoad)
             {
-                var armedDoor = map.GetComponent<MapComponent_RemoteAutoLink>()?.ClaimArmedDoor();
-                armedDoor?.LinkToButton(this);
+                var pendingDoor = map.GetComponent<MapComponent_RemoteAutoLink>()?.ClaimDoorFor(this);
+                pendingDoor?.LinkToButton(this);
             }
         }
 

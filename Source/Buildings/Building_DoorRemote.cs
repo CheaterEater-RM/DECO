@@ -228,7 +228,7 @@ namespace DoorsExpanded
         {
             foreach (var buttonDef in DefDatabase<ThingDef>.AllDefsListForReading)
             {
-                if (buttonDef.thingClass != typeof(Building_DoorRemoteButton))
+                if (!MapComponent_RemoteAutoLink.IsRemoteControlDef(buttonDef))
                     continue;
 
                 // Vanilla helper resolves icon/stuff and returns null when the def isn't
@@ -251,7 +251,7 @@ namespace DoorsExpanded
                     defaultIconColor = vanillaCommand.defaultIconColor,
                     action = () =>
                     {
-                        Map.GetComponent<MapComponent_RemoteAutoLink>()?.Arm(this);
+                        Map.GetComponent<MapComponent_RemoteAutoLink>()?.Arm(this, def);
                         startPlacement();
                         Messages.Message("PH_BuildButtonArmed".Translate(def.label),
                             this, MessageTypeDefOf.TaskCompletion, historical: false);
