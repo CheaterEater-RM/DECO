@@ -163,6 +163,19 @@ chains, missing walls, and both-wall ambiguous layouts stay independent. No
 save-visible names, scribe fields, or enum values changed. Build is clean
 (0 warnings/0 errors).
 
+Fixed after wide-curtain placement review (2026-06-11):
+
+- Wide tribal curtains now opt into `oneSidedWallSupport`. Placement rejects 2x1
+  and 3x1 curtains with no adjacent wall support, with user-facing descriptions
+  and a specific placement rejection message. The 1x1 curtain has no wall
+  constraint and continues to infer orientation from nearby walls.
+- 2x1 and 3x1 tribal curtains no longer require both vanilla multi-tile support
+  sides to close. A full wall-supported side is enough; unsupported loaded or
+  dev-spawned curtains still stay stuck open.
+- One-sided support checks the real placed footprint but canonicalizes parallel
+  rotations (`South` => `North`, `West` => `East`) for draw/pair checks, so
+  rotated N/S or E/W placements do not double-mirror asymmetric curtain art.
+
 ## Planned
 
 ### M2 - Remote doors

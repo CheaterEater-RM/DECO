@@ -23,7 +23,9 @@
 
   Follows the vanilla OrnateDoor / SecurityDoor placement pattern: Blueprint_Build
   (not Blueprint_Door, which is 1x1 only), useBlueprintGraphicAsGhost with a
-  closed-composite blueprint graphic, rotatable, PlaceWorker_MultiCellDoor.
+  closed-composite blueprint graphic, rotatable, and a DECO place worker that
+  preserves vanilla multi-cell door support rules unless a def opts into
+  one-sided wall support.
   Concrete defs must supply graphicData, blueprintGraphicData, size, uiIconPath,
   and a DoorsExpanded.CompProperties_DoorExpanded comp.
   -->
@@ -37,7 +39,7 @@
       <blueprintClass>Blueprint_Build</blueprintClass>
     </building>
     <placeWorkers>
-      <li>PlaceWorker_MultiCellDoor</li>
+      <li>DoorsExpanded.PlaceWorker_DoorExpanded</li>
     </placeWorkers>
   </ThingDef>
 

@@ -27,4 +27,5 @@
   <DECO_Settings_EscapingPawnsOpenOwnDoor_Desc>During a prison break, a prisoner may open the door of their own cell instead of having to break it down. Other locked doors still stay shut.</DECO_Settings_EscapingPawnsOpenOwnDoor_Desc>
   <DECO_Settings_SyncPairedAsymmetricDoors>Sync paired asymmetric doors</DECO_Settings_SyncPairedAsymmetricDoors>
   <DECO_Settings_SyncPairedAsymmetricDoors_Desc>Matching curtains or jail doors placed directly across a doorway open, hold open, and forbid together.</DECO_Settings_SyncPairedAsymmetricDoors_Desc>
+  <DECO_CurtainRequiresWallSupport>Must be placed next to at least one wall.</DECO_CurtainRequiresWallSupport>
 </LanguageData>

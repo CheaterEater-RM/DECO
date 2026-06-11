@@ -141,7 +141,7 @@
   <ThingDef ParentName="DExMultiDoorBase">
     <defName>HeronCurtainTribalDouble</defName>
     <label>curtain (2x1)</label>
-    <description>Divides rooms. A wide curtain spanning two tiles. Opens much faster than standard doors, but is flammable and offers no airtight seal.</description>
+    <description>Divides rooms. A wide curtain spanning two tiles. Opens much faster than standard doors, but is flammable, offers no airtight seal, and must hang from at least one full wall-supported side.</description>
     <!-- Curtains refund their full build cost on deconstruction (vanilla doors default to 0.5). -->
     <resourcesFractionWhenDeconstructed>1.0</resourcesFractionWhenDeconstructed>
     <size>(2,1)</size>
@@ -184,6 +184,7 @@
         <stretchOpenSize>(0.2,1)</stretchOpenSize> <!-- shrink to same size as shrunken 1x1 curtain -->
         <asymmetric>true</asymmetric>
         <syncAdjacentAsymmetricPair>true</syncAdjacentAsymmetricPair>
+        <oneSidedWallSupport>true</oneSidedWallSupport>
       </li>
     </comps>
   </ThingDef>
@@ -191,7 +192,7 @@
   <ThingDef ParentName="DExMultiDoorBase">
     <defName>HeronCurtainTribalTriple</defName>
     <label>curtain (3x1)</label>
-    <description>Divides rooms. A wide curtain spanning three tiles. Opens much faster than standard doors, but is flammable and offers no airtight seal.</description>
+    <description>Divides rooms. A wide curtain spanning three tiles. Opens much faster than standard doors, but is flammable, offers no airtight seal, and must hang from at least one full wall-supported side.</description>
     <!-- Curtains refund their full build cost on deconstruction (vanilla doors default to 0.5). -->
     <resourcesFractionWhenDeconstructed>1.0</resourcesFractionWhenDeconstructed>
     <size>(3,1)</size>
@@ -234,6 +235,7 @@
         <stretchOpenSize>(0.2,1)</stretchOpenSize> <!-- shrink to same size as shrunken 1x1 curtain -->
         <asymmetric>true</asymmetric>
         <syncAdjacentAsymmetricPair>true</syncAdjacentAsymmetricPair>
+        <oneSidedWallSupport>true</oneSidedWallSupport>
       </li>
     </comps>
   </ThingDef>

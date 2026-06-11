@@ -51,6 +51,7 @@ namespace DoorsExpanded
         // their wall side without changing unrelated single-panel doors.
         public bool asymmetric = false;
         public bool syncAdjacentAsymmetricPair = false;
+        public bool oneSidedWallSupport = false;
 
         // How far the leaf travels when fully open, in tiles of door width.
         public float doorOpenMultiplier = VisualDoorOffsetEnd;

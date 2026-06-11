@@ -62,6 +62,31 @@ namespace DoorsExpanded
             return rot;
         }
 
+        private static Rot4 CanonicalParallelRotation(Rot4 rot)
+        {
+            if (rot == Rot4.South)
+                return Rot4.North;
+            if (rot == Rot4.West)
+                return Rot4.East;
+            return rot;
+        }
+
+        internal static bool UsesOneSidedWallSupport(ThingDef def) =>
+            def?.GetCompProperties<CompProperties_DoorExpanded>()?.oneSidedWallSupport == true;
+
+        internal static bool HasOneSidedWallSupport(ThingDef def, IntVec3 loc, Rot4 rot,
+            Map map, bool includeUnbuilt)
+        {
+            var props = def?.GetCompProperties<CompProperties_DoorExpanded>();
+            if (def == null || props == null || !props.oneSidedWallSupport || map == null)
+                return false;
+
+            var rect = GenAdj.OccupiedRect(loc, rot, def.Size);
+            GetLocalSideDirections(CanonicalParallelRotation(rot), out var negativeSide, out var positiveSide);
+            return HasWallSide(rect, map, negativeSide, includeUnbuilt)
+                   || HasWallSide(rect, map, positiveSide, includeUnbuilt);
+        }
+
         protected override void DrawAt(Vector3 drawLoc, bool flip = false)
         {
             // We deliberately do NOT call base.DrawAt: Building_MultiTileDoor.DrawAt would
@@ -72,6 +97,8 @@ namespace DoorsExpanded
             var props = Props;
             var rotation = DoorRotationAt(def, props, Position, Rotation, Map);
             Rotation = rotation;
+            if (props.oneSidedWallSupport)
+                rotation = CanonicalParallelRotation(rotation);
             drawLoc.y = AltitudeLayer.DoorMoveable.AltitudeFor();
             var openPct = OpenPct;
             var asymmetricFlipped = ShouldDrawAsymmetricFlipped(rotation);
@@ -289,7 +316,7 @@ namespace DoorsExpanded
 
             var partnerRotation = DoorRotationAt(partner.def, partner.Props,
                 partner.Position, partner.Rotation, partner.Map);
-            if (partnerRotation != rotation
+            if (CanonicalParallelRotation(partnerRotation) != CanonicalParallelRotation(rotation)
                 || !AreRectsAdjacentOnSide(door.OccupiedRect(), partner.OccupiedRect(), searchSide)
                 || !HasWallSide(partner, searchSide))
             {
@@ -337,18 +364,19 @@ namespace DoorsExpanded
 
         private static bool HasWallSide(Building_DoorExpanded door, IntVec3 direction)
         {
-            foreach (var cell in SideCells(door.OccupiedRect(), direction))
+            return HasWallSide(door.OccupiedRect(), door.Map, direction, includeUnbuilt: false);
+        }
+
+        private static bool HasWallSide(CellRect rect, Map map, IntVec3 direction,
+            bool includeUnbuilt)
+        {
+            foreach (var cell in SideCells(rect, direction))
             {
-                if (!cell.InBounds(door.Map))
+                if (!cell.InBounds(map))
                     return false;
 
-                var edifice = cell.GetEdifice(door.Map);
-                if (edifice == null
-                    || edifice is Building_Door
-                    || edifice.def.passability != Traversability.Impassable)
-                {
+                if (!DoorUtility.EncapsulatingWallAt(cell, map, includeUnbuilt))
                     return false;
-                }
             }
 
             return true;

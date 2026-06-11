@@ -20,6 +20,8 @@ M1 adds C# only for non-vanilla draw behavior:
 - Asymmetric single-panel doors opt in with config fields rather than by inference.
   Curtains and jail doors use this to mirror their moving panel toward the adjacent
   wall and, when enabled in settings, sync matching paired doors.
+- Wide curtains also opt into one-sided wall support. They still require wall
+  support, but do not require vanilla multi-tile door walls on both sides.
 
 M2 adds remote control:
 
@@ -128,6 +130,12 @@ M0 XML guidance:
 - `DrawGhost` draws grey wall ghosts for the required support cells, lines 8-14.
 - `PostPlace` warns if support walls are missing, including unbuilt wall blueprints/frames in the check, lines 16-30.
 - It warns; it does not block placement. Runtime `StuckOpen` is what makes unsupported multi-tile doors remain stuck.
+
+DECO implication: `PlaceWorker_DoorExpanded` preserves the vanilla worker for
+ordinary multi-tile doors, but curtain defs with `oneSidedWallSupport=true`
+block placement unless at least one full support side has a wall, wall blueprint,
+or frame. A scoped `Building_Door.StuckOpen` postfix applies the same one-side
+rule at runtime for those opted-in curtain defs only.
 
 `RimWorld/Blueprint_Door.cs`
 
@@ -239,6 +247,9 @@ Implementation implication: if DECO later needs "cannot rotate south" behavior, 
   unambiguous pairs: same `ThingDef`, same rotation/axis, aligned same-size
   occupied rects, directly adjacent, and wall-bracketed on the outside. Mixed defs,
   chains, missing walls, and ambiguous both-wall layouts stay independent.
+- One-sided curtain support checks the real placed footprint, then canonicalizes
+  parallel rotations (`South` to `North`, `West` to `East`) for draw and pair
+  checks, so player rotation cannot create mirrored-twice N/S or E/W pairs.
 - Open events sync through `DoorOpen(int)` with a recursion guard. `Tick`
   reconciliation is deliberately narrow: hold-open or blocked-open keeps/reopens
   the partner, but ordinary close timing is allowed to settle closed.
