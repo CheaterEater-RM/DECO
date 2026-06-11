@@ -81,7 +81,17 @@ namespace DoorsExpanded
         public void NotifyRemoteStateChanged(Building_Door door, bool buttonEdge = false)
         {
             var index = doors.IndexOf(door);
-            if (index < 0 || !IsValidDoor(door))
+            if (index < 0)
+                return;
+            NotifyRemoteStateChangedAt(index, buttonEdge);
+        }
+
+        // Index-based core so callers that already know the slot (the tick loop) don't
+        // re-run IndexOf for the door and again for the SecuredRemotely check.
+        private void NotifyRemoteStateChangedAt(int index, bool buttonEdge)
+        {
+            var door = doors[index];
+            if (!IsValidDoor(door))
                 return;
 
             var button = buttons[index];
@@ -92,7 +102,9 @@ namespace DoorsExpanded
             {
                 RemoteDoorUtility.OpenDoor(door);
             }
-            else if (door.Open && (buttonEdge || SecuredRemotely(door)))
+            // button is already known spawned (guard above), so securedRemotely[index] is
+            // the full secured test here.
+            else if (door.Open && (buttonEdge || securedRemotely[index]))
             {
                 if (RemoteDoorUtility.HoldOpen(door))
                 {
@@ -125,7 +137,7 @@ namespace DoorsExpanded
                 }
 
                 if (buttons[i] != null && door.IsHashIntervalTick(30))
-                    NotifyRemoteStateChanged(door);
+                    NotifyRemoteStateChangedAt(i, buttonEdge: false);
             }
         }
 

@@ -12,9 +12,11 @@ over automatically — running entirely on DECO's code while DECO is active.
 
 - **Never enable both mods at once.** They claim the same internal names and will
   conflict (DECO declares the incompatibility, so the mod manager warns you).
-- Until DECO's remote-control milestone ships, the old mod's remote doors, buttons, and
-  levers (and any minified curtain in storage) drop from a migrated save with one-time
-  warnings. Everything else carries over.
+- Doors, gates, curtains, jail/blast doors, and remote doors, buttons, and levers all
+  carry over — DECO reuses the original's defNames and saved field names. The one
+  exception is a minified curtain sitting in storage from an old save: DECO's curtains
+  aren't minifiable, so any such orphan is removed once on load (its build cost refunded)
+  with a one-time warning.
 
 ## Attribution
 
