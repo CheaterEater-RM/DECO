@@ -83,6 +83,60 @@ Remaining verification (in-game):
 
 Dependencies: scaffold complete.
 
+### Jail door identity — prisoner locks + shoot-through bars (2026-06-11)
+
+Gave jail doors (and blast doors) a real role beyond "slower, tougher door".
+Implemented (C# + XML + settings, pending in-game validation):
+
+- **Mod settings infrastructure** (new, DECO had none): `DecoMod : Mod` +
+  `DecoSettings : ModSettings` (`Source/Settings/`), drawn with vanilla
+  `Listing_Standard`, auto-registered (no `modClass` in About.xml). Toggles:
+  `jailBlocksPrisoners` (default on), `blastBlocksPrisoners` (default on),
+  `escapingPawnsOpenOwnDoor` (off). Keyed UI labels added to `Keys.xml`.
+- **Prisoner locks** (`Source/Patches/PawnCanOpen_PrisonerLock_Patch.cs`): postfix on
+  `Building_Door.PawnCanOpen` (covers jail via `Building_DoorExpanded` and blast via
+  `Building_DoorRemote`, whose override calls base). Only narrows the result for the
+  four DECO jail/blast defs; never touches other doors. Prisoners can't open unless
+  actively prison-breaking, and then only a door that cardinally borders their current
+  prison cell if the escape toggle is on. This is intentionally stricter than
+  "Prisoners Don't Have Keys", whose OwnDoor check is room-only
+  (`OwnDoor && p.GetRoom().IsPrisonCell`): DECO matches its own "own cell door"
+  setting text and avoids optimistic pathing through later DECO doors. Prisoners only
+  — no slave or entity handling. Logic adapted from "Prisoners Don't Have Keys" by
+  Mlie (MIT, attributed in the file header and `LICENSE`). Added the four door
+  `ThingDef` DefOfs to `HeronDefOf`.
+- **Shoot-through bars — vanilla** (`PH_DoorJail` in `DEx_Doors.xml`): `fillPercent
+  0.25` makes the closed door Partial-fillage, so vanilla `GenGrid.CanBeSeenOver`
+  lets shots through and `CoverUtility.BaseBlockChance` gives exactly 25% directional
+  cover (off-axis and point-blank shots already get reduced cover by vanilla geometry).
+  Explicit `holdsRoof=true` keeps roof support despite the low fill. Removed
+  `isStuffableAirtight` (a ConfigError with non-Full fillage, and bars aren't airtight).
+- **Air through bars**: jail door `doorTempEqualizeIntervalClosed=34` +
+  `doorTempEqualizeRate=1.0` so a *closed* cell equalizes temperature like an open
+  passage — the door is bars, it doesn't insulate. Blast doors unchanged (still seal).
+- **Shoot-through bars — Combat Extended** (`Source/Patches/CombatExtendedCompat.cs`):
+  CE treats building `fillPercent` as cover *height* (shoot-over), which is wrong for
+  bars; its any-height random interception is the Plant path, hardcoded to `Plant`.
+  So under CE we register a `BlockerRegistry.RegisterCheckForCollisionCallback` (all
+  reflection — CE is a soft dependency, never referenced at build, no-ops cleanly when
+  absent) that replicates CE's plant formula on closed jail-door cells: trajectory-
+  gated, point-blank "gun-through-the-bars" exemption, and `0.25 * distance/40 *
+  accuracy` intercept chance via `Rand.ChanceSeeded`. Bars block more from range,
+  barely block point-blank — directionally consistent with vanilla cover and CE bushes.
+
+Scope: blast doors stay fully solid/airtight in both combat systems; only the prisoner
+lock applies to them. Save-safe: `PH_DoorJail` defName unchanged (frozen API per the
+Save Interchangeability Contract); this is a def + additive-settings change, no Scribe
+field rename. Build is clean (0 warnings/0 errors).
+
+Remaining verification (in-game): zero startup errors incl. no "is airtight but Fillage
+is not Full" ConfigError; settings UI toggles persist across restart; prisoner can't
+path out of a jail/blast cell, prison-break + escape toggle opens own cell door only;
+vanilla shoot-through + ~25% cover (and blast doors still block); closed jail cell
+tracks adjacent room temperature; under CE, across-room shots intercept a fraction of
+the time at varied heights while point-blank passes freely, blast doors still block;
+pre-change save with existing jail doors loads and gains new behavior with no errors.
+
 ## Planned
 
 ### M2 - Remote doors
@@ -134,7 +188,7 @@ Dependencies: M2 remote doors validated.
 
 ### User Todos:
 - linked tribal curtains so that they move in sync when opposite one another
-- jail cell doors are not passable by prisoners, and they allow firing through (with extra unlock time)
+- jail cell doors are not passable by prisoners, and they allow firing through (implemented 2026-06-11; see milestone above. Prisoner/blast locks + 25% shoot-through cover + air-through + CE compat. "Extra unlock time" not separately added — escaping prisoners must break the door unless the escape-own-door setting is on.)
 - Stop forbidding doors with secure remotely button (is this necessary?) (complete, no forbidding with DECO)
 - Ensure that if we use a "build remote" from a door, it gets linked automatically
 - Allow labelling remote switches (completed)
@@ -142,6 +196,7 @@ Dependencies: M2 remote doors validated.
 - Check containment with Anomaly (audited 2026-06-10, no code change needed — see below)
 - Ensure that creatures and anything else can't get through (resolved by inheritance — see below)
 - Allow Rimworld security door to use buttons
+- Balance and tuning: costs, HP, opening/closing speeds
 
 ### Anomaly Containment Audit (2026-06-10)
 

@@ -243,6 +243,11 @@
     <thingClass>DoorsExpanded.Building_DoorExpanded</thingClass>
     <size>(1,1)</size>
     <rotatable>false</rotatable>
+    <!-- It's bars: shots pass through (Partial fillage) and it gives ~25% cover in vanilla
+         combat. holdsRoof kept true so the door still supports roofs despite the low fill.
+         Under Combat Extended the bars effect comes from CombatExtendedCompat instead. -->
+    <fillPercent>0.25</fillPercent>
+    <holdsRoof>true</holdsRoof>
     <statBases>
       <WorkToBuild>1500</WorkToBuild>
       <MaxHitPoints>300</MaxHitPoints>
@@ -266,7 +271,11 @@
     </graphicData>
     <uiIconPath>Things/Building/DEx/Door/JailCell_Mover</uiIconPath>
     <building>
-      <isStuffableAirtight>true</isStuffableAirtight>
+      <!-- Not airtight: bars let air through (and isStuffableAirtight with non-Full Fillage
+           is a vanilla ConfigError anyway). Near-instant temperature equalize even when
+           closed, so a closed jail cell tracks the adjacent room like an open passage. -->
+      <doorTempEqualizeIntervalClosed>34</doorTempEqualizeIntervalClosed>
+      <doorTempEqualizeRate>1.0</doorTempEqualizeRate>
       <blueprintClass>Blueprint_Build</blueprintClass>
       <blueprintGraphicData>
         <texPath>Things/Building/DEx/Door/JailCell_Blueprint</texPath>

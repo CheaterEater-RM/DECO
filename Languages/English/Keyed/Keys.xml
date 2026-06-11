@@ -17,4 +17,12 @@
   <PH_BuildButtonArmed>This door will link to the next {0} you finish building.</PH_BuildButtonArmed>
   <PH_RenameButton>Rename</PH_RenameButton>
   <PH_RenameButtonDesc>Give this button or lever a custom name so you can tell your remote controls apart.</PH_RenameButtonDesc>
+
+  <!-- Mod settings -->
+  <DECO_Settings_JailBlocksPrisoners>Jail doors block prisoners</DECO_Settings_JailBlocksPrisoners>
+  <DECO_Settings_JailBlocksPrisoners_Desc>Prisoners can't open jail doors — they don't have the keys. They can still force a door during a prison break.</DECO_Settings_JailBlocksPrisoners_Desc>
+  <DECO_Settings_BlastBlocksPrisoners>Blast doors block prisoners</DECO_Settings_BlastBlocksPrisoners>
+  <DECO_Settings_BlastBlocksPrisoners_Desc>Prisoners can't open blast doors — they lack a keycard. They can still force a door during a prison break.</DECO_Settings_BlastBlocksPrisoners_Desc>
+  <DECO_Settings_EscapingPawnsOpenOwnDoor>Escaping prisoners can open their own cell door</DECO_Settings_EscapingPawnsOpenOwnDoor>
+  <DECO_Settings_EscapingPawnsOpenOwnDoor_Desc>During a prison break, a prisoner may open the door of their own cell instead of having to break it down. Other locked doors still stay shut.</DECO_Settings_EscapingPawnsOpenOwnDoor_Desc>
 </LanguageData>
