@@ -229,7 +229,7 @@ Dependencies: M2 remote doors validated.
 - linked tribal curtains so that they move in sync when opposite one another (completed 2026-06-11 as shared asymmetric-door orientation + pair sync; curtains and jail doors now opt in)
 - jail cell doors are not passable by prisoners, and they allow firing through (implemented 2026-06-11; see milestone above. Prisoner/blast locks + 25% shoot-through cover + air-through + CE compat.)
 - Stop forbidding doors with secure remotely button (is this necessary?) (complete, no forbidding with DECO)
-- Ensure that if we use a "build remote" from a door, it gets linked automatically 
+- Ensure that if we use a "build remote" from a door, it gets linked automatically (complete)
 - Allow labelling remote switches (completed)
 - Add clearer lines for remote switches to doors (completed)
 - Check containment with Anomaly (audited 2026-06-10, no code change needed — see below)
