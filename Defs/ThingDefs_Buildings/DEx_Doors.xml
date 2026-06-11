@@ -279,9 +279,11 @@
     </graphicData>
     <uiIconPath>Things/Building/DEx/Door/JailCell_Mover</uiIconPath>
     <building>
-      <!-- Not airtight: bars let air through (and isStuffableAirtight with non-Full Fillage
-           is a vanilla ConfigError anyway). Near-instant temperature equalize even when
-           closed, so a closed jail cell tracks the adjacent room like an open passage. -->
+      <!-- Not airtight: bars let air and vacuum through (and isStuffableAirtight with
+           non-Full Fillage is a vanilla ConfigError anyway). Near-instant temperature
+           equalize even when closed, so a closed jail cell tracks the adjacent room
+           like an open passage. -->
+      <alwaysExchangeVacuum>true</alwaysExchangeVacuum>
       <doorTempEqualizeIntervalClosed>34</doorTempEqualizeIntervalClosed>
       <doorTempEqualizeRate>1.0</doorTempEqualizeRate>
       <blueprintClass>Blueprint_Build</blueprintClass>
@@ -313,7 +315,7 @@
   <ThingDef ParentName="DExMultiDoorBase">
     <defName>PH_GateDoubleThick</defName>
     <label>gate</label>
-    <description>A wide, heavy gate spanning two tiles. Requires adjacent walls to function.</description>
+    <description>A wide, heavy gate spanning two tiles. Requires adjacent walls to function. Its bars let air and vacuum pass through.</description>
     <size>(2,1)</size>
     <statBases>
       <WorkToBuild>2500</WorkToBuild>
@@ -330,7 +332,8 @@
     </graphicData>
     <uiIconPath>Things/Building/DEx/Door/Gate_MenuUI</uiIconPath>
     <building>
-      <isStuffableAirtight>true</isStuffableAirtight>
+      <isStuffableAirtight>false</isStuffableAirtight>
+      <alwaysExchangeVacuum>true</alwaysExchangeVacuum>
       <blueprintGraphicData>
         <texPath>Things/Building/DEx/Door/GateDoubleThick_Mover</texPath>
         <graphicClass>Graphic_Multi</graphicClass>

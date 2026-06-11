@@ -137,6 +137,31 @@ tracks adjacent room temperature; under CE, across-room shots intercept a fracti
 the time at varied heights while point-blank passes freely, blast doors still block;
 pre-change save with existing jail doors loads and gains new behavior with no errors.
 
+### Odyssey airtightness audit (2026-06-11)
+
+Audited against RimWorld 1.6.4850/Odyssey vacuum code:
+
+- Vanilla `Building.ExchangeVacuum`: airtight buildings do not exchange vacuum unless
+  `building.alwaysExchangeVacuum`; non-airtight buildings always exchange vacuum.
+- Vanilla `Building_Door.ExchangeVacuum`: if the base building does not exchange
+  vacuum, a closed door seals and an open door exchanges; otherwise it exchanges.
+- Vanilla stuffable door behavior: `building.isStuffableAirtight` seals only with
+  airtight stuff (`stuffProps.isAirtight`; e.g. steel yes, wood/cloth no). This
+  matches the observed vanilla 1x1 door behavior.
+
+DECO result:
+
+- `PH_DoorDouble`, `PH_DoorTriple`, `PH_AutodoorDouble`, and `PH_AutodoorTriple`
+  use `isStuffableAirtight=true`, so steel/stone variants seal and wooden variants
+  exchange vacuum, intentionally mirroring vanilla 1x1 doors.
+- Blast doors (`PH_DoorBlastSingle`, `PH_DoorBlastDoor`,
+  `PH_DoorThickBlastDoor`) are metallic stuffable-airtight and remain sealed when
+  closed, consistent with their heavy/blast identity.
+- Curtains (`HeronCurtainTribal*`), jail door (`PH_DoorJail`), and gate
+  (`PH_GateDoubleThick`) intentionally exchange vacuum while closed:
+  curtains/jail/gate set `alwaysExchangeVacuum=true`; gate also explicitly sets
+  `isStuffableAirtight=false` so metal gates do not accidentally seal.
+
 ### Asymmetric door orientation + paired state sync (2026-06-11)
 
 Implemented (C# + XML + settings, validated by user screenshot/in-game pass):
