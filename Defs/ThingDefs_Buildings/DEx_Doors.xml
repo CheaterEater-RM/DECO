@@ -263,7 +263,7 @@
     <costStuffCount>50</costStuffCount>
     <costList>
       <Steel>30</Steel>
-      <ComponentIndustrial>2</ComponentIndustrial>
+      <ComponentIndustrial>1</ComponentIndustrial> <!-- just 1 component now, was 2 -->
     </costList>
     <stuffCategories Inherit="False">
       <li>Metallic</li>
