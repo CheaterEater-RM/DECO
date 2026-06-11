@@ -98,6 +98,11 @@ Single config object on Tier 1/2 defs. Fields (carried over, trimmed):
 
 `doorType` (enum), `singleDoor`, `fixedPerspective`, `rotatesSouth`, `doorFrame` / `doorFrameOffset`, `doorFrameSplit` / `doorFrameSplitOffset`, `doorAsync`, `stretchCloseSize` / `stretchOpenSize` / `stretchOffset`, `tempEqualizeRate`.
 
+Implementation update (2026-06-11): DECO also adds opt-in extension fields
+`asymmetric` and `syncAdjacentAsymmetricPair`. They default false so the original
+XML surface stays parse-compatible. Curtains and jail doors use them to mirror
+single-panel art toward adjacent walls and optionally sync matching paired doors.
+
 ### Deliberate departures from the original
 
 - **Do not rewrite `parentDef.thingClass` from inside the comp.** The original's comp reassigns `thingClass` in `ResolveReferences` — slick, but it's "magic" that only earns its keep for third-party modders who forget to set it. Our defs are ours: **set `thingClass` explicitly in XML.** The comp carries data only. (If/when a public API ships, the rewrite trick can return behind that boundary.)
@@ -196,7 +201,7 @@ That last one is a global hot patch. It is the headline performance liability.
 ## 10. Milestones
 
 - **M0 — XML catalogue (Tier 0).** All slide-animated doors/gates/curtains/jail door as pure XML on vanilla classes. Assets wired. Ships and is fully playable with **no assembly**. Validates the "how much needs code at all" question early.
-- **M1 — Animated doors (Tier 1).** `Building_DoorExpanded` draw subclass + config comp. Swing/stretch/frames. Resolve ⟨TBD-4⟩ (ghost/blueprint) here — prove the no-patch path before adding any patch.
+- **M1 — Animated doors (Tier 1).** `Building_DoorExpanded` draw subclass + config comp. Swing/stretch/frames/asymmetric single-panel helpers. Resolve ⟨TBD-4⟩ (ghost/blueprint) here — prove the no-patch path before adding any patch.
 - **M2 — Remote doors (Tier 2).** Remote door + button/lever, link model, locked overlay, interaction job.
 - **M3 — Polish.** Optional label suffix (⟨TBD-2⟩), CE audit sign-off (⟨TBD-6⟩), docs, save-behavior matrix.
 

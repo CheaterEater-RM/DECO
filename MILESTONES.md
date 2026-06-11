@@ -137,6 +137,32 @@ tracks adjacent room temperature; under CE, across-room shots intercept a fracti
 the time at varied heights while point-blank passes freely, blast doors still block;
 pre-change save with existing jail doors loads and gains new behavior with no errors.
 
+### Asymmetric door orientation + paired state sync (2026-06-11)
+
+Implemented (C# + XML + settings, validated by user screenshot/in-game pass):
+
+- Added additive `CompProperties_DoorExpanded` opt-in fields: `asymmetric` and
+  `syncAdjacentAsymmetricPair`. Defaults are false, preserving the original
+  Doors Expanded XML surface unless a DECO def opts in.
+- Opted in tribal curtains (`HeronCurtainTribal*`) and the jail door
+  (`PH_DoorJail`). Other single-panel doors, including remote/garage doors, remain
+  unchanged unless explicitly tagged later.
+- `Building_DoorExpanded` now corrects asymmetric single-panel draw direction
+  toward the adjacent wall. It uses the existing `flipped` draw branch, so both the
+  motion offset and directional art mirror together (curtain folds, jail handle).
+- Added `syncPairedAsymmetricDoors` mod setting (default on). Matching, same-def,
+  wall-bracketed adjacent asymmetric pairs sync open events, blocked-open retries,
+  hold-open state, and forbid/unforbid state.
+- Added a narrow `CompForbiddable.Forbidden` setter postfix for pair forbid
+  mirroring. It routes through the same pair detector and recursion guard; unrelated
+  doors and ambiguous layouts are ignored.
+
+Scope and safety: pair detection requires same `ThingDef`, same axis/rotation,
+aligned occupied rects, direct adjacency, and outside wall brackets. Mixed widths,
+chains, missing walls, and both-wall ambiguous layouts stay independent. No
+save-visible names, scribe fields, or enum values changed. Build is clean
+(0 warnings/0 errors).
+
 ## Planned
 
 ### M2 - Remote doors
@@ -187,10 +213,10 @@ Dependencies: M2 remote doors validated.
 
 
 ### User Todos:
-- linked tribal curtains so that they move in sync when opposite one another
-- jail cell doors are not passable by prisoners, and they allow firing through (implemented 2026-06-11; see milestone above. Prisoner/blast locks + 25% shoot-through cover + air-through + CE compat. "Extra unlock time" not separately added — escaping prisoners must break the door unless the escape-own-door setting is on.)
+- linked tribal curtains so that they move in sync when opposite one another (completed 2026-06-11 as shared asymmetric-door orientation + pair sync; curtains and jail doors now opt in)
+- jail cell doors are not passable by prisoners, and they allow firing through (implemented 2026-06-11; see milestone above. Prisoner/blast locks + 25% shoot-through cover + air-through + CE compat.)
 - Stop forbidding doors with secure remotely button (is this necessary?) (complete, no forbidding with DECO)
-- Ensure that if we use a "build remote" from a door, it gets linked automatically
+- Ensure that if we use a "build remote" from a door, it gets linked automatically 
 - Allow labelling remote switches (completed)
 - Add clearer lines for remote switches to doors (completed)
 - Check containment with Anomaly (audited 2026-06-10, no code change needed — see below)

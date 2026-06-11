@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -17,6 +18,8 @@ namespace DoorsExpanded
     public class Building_DoorExpanded : Building_MultiTileDoor
     {
         private CompProperties_DoorExpanded propsInt;
+        private static bool suppressPairDoorOpen;
+        private static bool suppressPairForbid;
 
         // Tolerant of a missing comp: save-swapping between mods can briefly pair this class
         // with a def that lacks it (e.g. a def edited mid-save). Fall back to defaults
@@ -28,6 +31,9 @@ namespace DoorsExpanded
 
         // FreePassage doors are permanently open (vanilla hook).
         protected override bool AlwaysOpen => Props.doorType == DoorType.FreePassage;
+
+        private static bool SyncPairedAsymmetricDoors =>
+            DecoMod.Settings?.syncPairedAsymmetricDoors ?? true;
 
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
@@ -68,10 +74,11 @@ namespace DoorsExpanded
             Rotation = rotation;
             drawLoc.y = AltitudeLayer.DoorMoveable.AltitudeFor();
             var openPct = OpenPct;
+            var asymmetricFlipped = ShouldDrawAsymmetricFlipped(rotation);
 
             for (var i = 0; i < 2; i++)
             {
-                var flipped = i != 0;
+                var flipped = props.singleDoor ? asymmetricFlipped : i != 0;
                 var graphic = (!flipped && props.doorAsync != null)
                     ? props.doorAsync.GraphicColoredFor(this)
                     : Graphic;
@@ -96,6 +103,320 @@ namespace DoorsExpanded
             }
 
             Comps_PostDraw();
+        }
+
+        protected override void DoorOpen(int ticksToClose = 110)
+        {
+            base.DoorOpen(ticksToClose);
+            if (suppressPairDoorOpen || !SyncPairedAsymmetricDoors)
+                return;
+
+            if (TryGetAdjacentAsymmetricPair(this, out var partner))
+            {
+                try
+                {
+                    suppressPairDoorOpen = true;
+                    partner.DoorOpen(ticksToClose);
+                }
+                finally
+                {
+                    suppressPairDoorOpen = false;
+                }
+            }
+        }
+
+        protected override void Tick()
+        {
+            base.Tick();
+            ReconcileAsymmetricPair();
+        }
+
+        public override IEnumerable<Gizmo> GetGizmos()
+        {
+            Building_DoorExpanded partner = null;
+            var replaceHoldOpen = SyncPairedAsymmetricDoors
+                && TryGetAdjacentAsymmetricPair(this, out partner);
+            var holdOpenLabel = "CommandToggleDoorHoldOpen".Translate().ToString();
+
+            foreach (var gizmo in base.GetGizmos())
+            {
+                if (replaceHoldOpen
+                    && gizmo is Command_Toggle command
+                    && command.defaultLabel == holdOpenLabel)
+                {
+                    yield return PairedHoldOpenGizmo(partner);
+                }
+                else
+                {
+                    yield return gizmo;
+                }
+            }
+        }
+
+        internal static void NotifyForbiddenChanged(Thing thing, bool forbidden)
+        {
+            if (suppressPairForbid
+                || !SyncPairedAsymmetricDoors
+                || thing is not Building_DoorExpanded door
+                || !TryGetAdjacentAsymmetricPair(door, out var partner))
+            {
+                return;
+            }
+
+            try
+            {
+                suppressPairForbid = true;
+                partner.SetForbidden(forbidden, warnOnFail: false);
+            }
+            finally
+            {
+                suppressPairForbid = false;
+            }
+        }
+
+        private Command_Toggle PairedHoldOpenGizmo(Building_DoorExpanded partner)
+        {
+            return new Command_Toggle
+            {
+                defaultLabel = "CommandToggleDoorHoldOpen".Translate(),
+                defaultDesc = "CommandToggleDoorHoldOpenDesc".Translate(),
+                hotKey = KeyBindingDefOf.Misc3,
+                icon = TexCommand.HoldOpen,
+                isActive = () => holdOpenInt || partner.holdOpenInt,
+                toggleAction = () =>
+                {
+                    var next = !(holdOpenInt || partner.holdOpenInt);
+                    holdOpenInt = next;
+                    partner.holdOpenInt = next;
+                }
+            };
+        }
+
+        private void ReconcileAsymmetricPair()
+        {
+            if (!SyncPairedAsymmetricDoors || !TryGetAdjacentAsymmetricPair(this, out var partner))
+                return;
+
+            if (holdOpenInt || partner.holdOpenInt)
+            {
+                holdOpenInt = true;
+                partner.holdOpenInt = true;
+                if (Open || partner.Open)
+                    KeepPairOpen(partner);
+                return;
+            }
+
+            if (Open && BlockedOpenMomentary)
+                KeepDoorOpen(partner, Mathf.Max(110, ticksUntilClose));
+            if (partner.Open && partner.BlockedOpenMomentary)
+                KeepDoorOpen(this, Mathf.Max(110, partner.ticksUntilClose));
+
+            var forbidden = this.TryGetComp<CompForbiddable>()?.Forbidden ?? false;
+            var partnerForbidden = partner.TryGetComp<CompForbiddable>()?.Forbidden ?? false;
+            if (forbidden != partnerForbidden && (forbidden || partnerForbidden))
+            {
+                try
+                {
+                    suppressPairForbid = true;
+                    this.SetForbidden(true, warnOnFail: false);
+                    partner.SetForbidden(true, warnOnFail: false);
+                }
+                finally
+                {
+                    suppressPairForbid = false;
+                }
+            }
+        }
+
+        private void KeepPairOpen(Building_DoorExpanded partner)
+        {
+            KeepDoorOpen(this, Mathf.Max(110, ticksUntilClose));
+            KeepDoorOpen(partner, Mathf.Max(110, partner.ticksUntilClose));
+        }
+
+        private static void KeepDoorOpen(Building_DoorExpanded door, int ticksToClose)
+        {
+            try
+            {
+                suppressPairDoorOpen = true;
+                door.DoorOpen(ticksToClose);
+            }
+            finally
+            {
+                suppressPairDoorOpen = false;
+            }
+        }
+
+        private bool ShouldDrawAsymmetricFlipped(Rot4 rotation)
+        {
+            if (!Props.asymmetric || !Props.singleDoor || !Spawned)
+                return false;
+
+            GetLocalSideDirections(rotation, out _, out var positiveSide);
+            if (!TryGetUniqueWallSide(this, rotation, out var wallSide))
+                return false;
+
+            return wallSide == positiveSide;
+        }
+
+        internal static bool TryGetAdjacentAsymmetricPair(Building_DoorExpanded door,
+            out Building_DoorExpanded partner)
+        {
+            partner = null;
+            if (door == null
+                || !door.Spawned
+                || !door.Props.asymmetric
+                || !door.Props.syncAdjacentAsymmetricPair)
+            {
+                return false;
+            }
+
+            var rotation = DoorRotationAt(door.def, door.Props, door.Position, door.Rotation, door.Map);
+            if (!TryGetUniqueWallSide(door, rotation, out var wallSide))
+                return false;
+
+            var searchSide = Opposite(wallSide);
+            partner = DoorOnSide(door, searchSide);
+            if (partner == null
+                || partner == door
+                || partner.def != door.def
+                || !partner.Props.asymmetric
+                || !partner.Props.syncAdjacentAsymmetricPair)
+            {
+                partner = null;
+                return false;
+            }
+
+            var partnerRotation = DoorRotationAt(partner.def, partner.Props,
+                partner.Position, partner.Rotation, partner.Map);
+            if (partnerRotation != rotation
+                || !AreRectsAdjacentOnSide(door.OccupiedRect(), partner.OccupiedRect(), searchSide)
+                || !HasWallSide(partner, searchSide))
+            {
+                partner = null;
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool TryGetUniqueWallSide(Building_DoorExpanded door, Rot4 rotation,
+            out IntVec3 wallSide)
+        {
+            GetLocalSideDirections(rotation, out var negativeSide, out var positiveSide);
+            var negativeWall = HasWallSide(door, negativeSide);
+            var positiveWall = HasWallSide(door, positiveSide);
+
+            if (negativeWall == positiveWall)
+            {
+                wallSide = IntVec3.Invalid;
+                return false;
+            }
+
+            wallSide = positiveWall ? positiveSide : negativeSide;
+            return true;
+        }
+
+        private static void GetLocalSideDirections(Rot4 rotation, out IntVec3 negativeSide,
+            out IntVec3 positiveSide)
+        {
+            if (rotation == Rot4.East)
+                negativeSide = IntVec3.North;
+            else if (rotation == Rot4.South)
+                negativeSide = IntVec3.East;
+            else if (rotation == Rot4.West)
+                negativeSide = IntVec3.South;
+            else
+                negativeSide = IntVec3.West;
+
+            positiveSide = Opposite(negativeSide);
+        }
+
+        private static IntVec3 Opposite(IntVec3 direction) =>
+            new(-direction.x, 0, -direction.z);
+
+        private static bool HasWallSide(Building_DoorExpanded door, IntVec3 direction)
+        {
+            foreach (var cell in SideCells(door.OccupiedRect(), direction))
+            {
+                if (!cell.InBounds(door.Map))
+                    return false;
+
+                var edifice = cell.GetEdifice(door.Map);
+                if (edifice == null
+                    || edifice is Building_Door
+                    || edifice.def.passability != Traversability.Impassable)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static Building_DoorExpanded DoorOnSide(Building_DoorExpanded door, IntVec3 direction)
+        {
+            Building_DoorExpanded found = null;
+            foreach (var cell in SideCells(door.OccupiedRect(), direction))
+            {
+                if (!cell.InBounds(door.Map))
+                    return null;
+
+                if (cell.GetEdifice(door.Map) is not Building_DoorExpanded candidate)
+                    return null;
+
+                if (found != null && found != candidate)
+                    return null;
+
+                found = candidate;
+            }
+
+            return found;
+        }
+
+        private static bool AreRectsAdjacentOnSide(CellRect source, CellRect other, IntVec3 direction)
+        {
+            if (direction == IntVec3.East)
+                return source.maxX + 1 == other.minX
+                       && source.minZ == other.minZ
+                       && source.maxZ == other.maxZ;
+            if (direction == IntVec3.West)
+                return source.minX - 1 == other.maxX
+                       && source.minZ == other.minZ
+                       && source.maxZ == other.maxZ;
+            if (direction == IntVec3.North)
+                return source.maxZ + 1 == other.minZ
+                       && source.minX == other.minX
+                       && source.maxX == other.maxX;
+
+            return source.minZ - 1 == other.maxZ
+                   && source.minX == other.minX
+                   && source.maxX == other.maxX;
+        }
+
+        private static IEnumerable<IntVec3> SideCells(CellRect rect, IntVec3 direction)
+        {
+            if (direction == IntVec3.East)
+            {
+                for (var z = rect.minZ; z <= rect.maxZ; z++)
+                    yield return new IntVec3(rect.maxX + 1, 0, z);
+                yield break;
+            }
+            if (direction == IntVec3.West)
+            {
+                for (var z = rect.minZ; z <= rect.maxZ; z++)
+                    yield return new IntVec3(rect.minX - 1, 0, z);
+                yield break;
+            }
+            if (direction == IntVec3.North)
+            {
+                for (var x = rect.minX; x <= rect.maxX; x++)
+                    yield return new IntVec3(x, 0, rect.maxZ + 1);
+                yield break;
+            }
+
+            for (var x = rect.minX; x <= rect.maxX; x++)
+                yield return new IntVec3(x, 0, rect.minZ - 1);
         }
 
         // Mirrors the original Draw(): pick per-type params, then draw one leaf.

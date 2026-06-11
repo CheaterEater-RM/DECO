@@ -17,6 +17,9 @@ M1 adds C# only for non-vanilla draw behavior:
 - `Building_DoorExpanded : Building_MultiTileDoor`, draw-only where possible.
 - Config comp carries DECO draw data, but defs set `thingClass` explicitly.
 - Custom blueprint or ghost code should be scoped to DECO classes/defs, not global `Thing.DrawAt`.
+- Asymmetric single-panel doors opt in with config fields rather than by inference.
+  Curtains and jail doors use this to mirror their moving panel toward the adjacent
+  wall and, when enabled in settings, sync matching paired doors.
 
 M2 adds remote control:
 
@@ -219,6 +222,32 @@ Implementation implication:
 - `HandleRotation` rotates attachments to valid wall sides, otherwise plays a sound and rotates `placingRot`, lines 221-239.
 
 Implementation implication: if DECO later needs "cannot rotate south" behavior, prefer def/catalogue choices first, then a scoped `PlaceWorker` or designator postfix. A transpiler is not justified by this source shape.
+
+## Asymmetric Door Helper
+
+`Building_DoorExpanded` supports explicit asymmetric-door opt-in through
+`CompProperties_DoorExpanded.asymmetric` and
+`syncAdjacentAsymmetricPair`.
+
+- Orientation correction is always visual-only and always on for opted-in defs.
+  The helper checks the two local slide/stretch-axis sides after `DoorRotationAt`;
+  if exactly one outside side is a wall-like impassable non-door edifice, the
+  single panel draws through the existing `flipped` branch. This reverses the
+  movement offset and mirrors directional art such as curtain folds and jail-door
+  handles.
+- Pair sync is gated by `DecoSettings.syncPairedAsymmetricDoors` and only accepts
+  unambiguous pairs: same `ThingDef`, same rotation/axis, aligned same-size
+  occupied rects, directly adjacent, and wall-bracketed on the outside. Mixed defs,
+  chains, missing walls, and ambiguous both-wall layouts stay independent.
+- Open events sync through `DoorOpen(int)` with a recursion guard. `Tick`
+  reconciliation is deliberately narrow: hold-open or blocked-open keeps/reopens
+  the partner, but ordinary close timing is allowed to settle closed.
+- Forbid mirroring uses a narrow Harmony postfix on `CompForbiddable.Forbidden`
+  setter, routed back through the same pair helper and recursion guard. This covers
+  vanilla gizmos and mass forbid/unforbid designators without replacing the comp UI.
+
+Current opt-in defs: `HeronCurtainTribal`, `HeronCurtainTribalDouble`,
+`HeronCurtainTribalTriple`, and `PH_DoorJail`.
 
 ## Current Open Checks
 

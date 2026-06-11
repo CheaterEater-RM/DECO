@@ -13,6 +13,8 @@ namespace DoorsExpanded
         public bool blastBlocksPrisoners = true;
         // A prisoner who is actively breaking out may open the door of their own cell.
         public bool escapingPawnsOpenOwnDoor = false;
+        // Adjacent, wall-bracketed asymmetric doors act as a paired opening.
+        public bool syncPairedAsymmetricDoors = true;
 
         public override void ExposeData()
         {
@@ -20,6 +22,7 @@ namespace DoorsExpanded
             Scribe_Values.Look(ref jailBlocksPrisoners, "jailBlocksPrisoners", defaultValue: true);
             Scribe_Values.Look(ref blastBlocksPrisoners, "blastBlocksPrisoners", defaultValue: true);
             Scribe_Values.Look(ref escapingPawnsOpenOwnDoor, "escapingPawnsOpenOwnDoor", defaultValue: false);
+            Scribe_Values.Look(ref syncPairedAsymmetricDoors, "syncPairedAsymmetricDoors", defaultValue: true);
         }
     }
 }

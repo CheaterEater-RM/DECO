@@ -132,6 +132,8 @@
       <li Class="DoorsExpanded.CompProperties_DoorExpanded">
         <doorType>Stretch</doorType>
         <singleDoor>true</singleDoor>
+        <asymmetric>true</asymmetric>
+        <syncAdjacentAsymmetricPair>true</syncAdjacentAsymmetricPair>
       </li>
     </comps>
   </ThingDef>
@@ -180,6 +182,8 @@
         <doorType>Stretch</doorType>
         <singleDoor>true</singleDoor>
         <stretchOpenSize>(0.2,1)</stretchOpenSize> <!-- shrink to same size as shrunken 1x1 curtain -->
+        <asymmetric>true</asymmetric>
+        <syncAdjacentAsymmetricPair>true</syncAdjacentAsymmetricPair>
       </li>
     </comps>
   </ThingDef>
@@ -228,6 +232,8 @@
         <doorType>Stretch</doorType>
         <singleDoor>true</singleDoor>
         <stretchOpenSize>(0.2,1)</stretchOpenSize> <!-- shrink to same size as shrunken 1x1 curtain -->
+        <asymmetric>true</asymmetric>
+        <syncAdjacentAsymmetricPair>true</syncAdjacentAsymmetricPair>
       </li>
     </comps>
   </ThingDef>
@@ -291,6 +297,8 @@
         <singleDoor>true</singleDoor>
         <doorOpenMultiplier>0.8</doorOpenMultiplier>
         <rotatesSouth>false</rotatesSouth>
+        <asymmetric>true</asymmetric>
+        <syncAdjacentAsymmetricPair>true</syncAdjacentAsymmetricPair>
       </li>
     </comps>
     <researchPrerequisites>

@@ -40,6 +40,13 @@ namespace DoorsExpanded
                 ref settings.escapingPawnsOpenOwnDoor,
                 "DECO_Settings_EscapingPawnsOpenOwnDoor_Desc".Translate());
 
+            listing.GapLine();
+
+            listing.CheckboxLabeled(
+                "DECO_Settings_SyncPairedAsymmetricDoors".Translate(),
+                ref settings.syncPairedAsymmetricDoors,
+                "DECO_Settings_SyncPairedAsymmetricDoors_Desc".Translate());
+
             listing.End();
             base.DoSettingsWindowContents(inRect);
         }

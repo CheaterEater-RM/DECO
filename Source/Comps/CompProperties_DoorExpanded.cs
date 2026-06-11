@@ -46,6 +46,12 @@ namespace DoorsExpanded
         // curtains. Parsed for XML compatibility; not yet implemented.
         public float tempEqualizeRate = 1f;
 
+        // DECO extension fields. Defaults preserve the original XML surface: defs opt in
+        // explicitly so asymmetric art such as curtains and jail doors can mirror toward
+        // their wall side without changing unrelated single-panel doors.
+        public bool asymmetric = false;
+        public bool syncAdjacentAsymmetricPair = false;
+
         // How far the leaf travels when fully open, in tiles of door width.
         public float doorOpenMultiplier = VisualDoorOffsetEnd;
 

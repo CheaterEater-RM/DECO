@@ -25,4 +25,6 @@
   <DECO_Settings_BlastBlocksPrisoners_Desc>Prisoners can't open blast doors — they lack a keycard. They can still force a door during a prison break.</DECO_Settings_BlastBlocksPrisoners_Desc>
   <DECO_Settings_EscapingPawnsOpenOwnDoor>Escaping prisoners can open their own cell door</DECO_Settings_EscapingPawnsOpenOwnDoor>
   <DECO_Settings_EscapingPawnsOpenOwnDoor_Desc>During a prison break, a prisoner may open the door of their own cell instead of having to break it down. Other locked doors still stay shut.</DECO_Settings_EscapingPawnsOpenOwnDoor_Desc>
+  <DECO_Settings_SyncPairedAsymmetricDoors>Sync paired asymmetric doors</DECO_Settings_SyncPairedAsymmetricDoors>
+  <DECO_Settings_SyncPairedAsymmetricDoors_Desc>Matching curtains or jail doors placed directly across a doorway open, hold open, and forbid together.</DECO_Settings_SyncPairedAsymmetricDoors_Desc>
 </LanguageData>

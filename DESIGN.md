@@ -2,6 +2,12 @@
 
 This repo is scaffolded from the RimWorld mod templates for DECO, short for Doors Expanded Continued Overhaul.
 
+Current implementation note: DECO now has a shared asymmetric-door helper for
+single-panel doors that opt in through `CompProperties_DoorExpanded`. Curtains and
+the jail door mirror their moving panel toward the adjacent wall, and matching
+wall-bracketed pairs can sync open/close, hold-open, and forbid state behind the
+`syncPairedAsymmetricDoors` mod setting.
+
 The authoritative rewrite design currently lives in `DoorsExpanded_Rewrite_DESIGN.md`. That document defines DECO as a greenfield RimWorld 1.6 rewrite inspired by Doors Expanded, with the implementation split into:
 
 - M0: pure XML catalogue on vanilla `Building_Door` and `Building_MultiTileDoor`
