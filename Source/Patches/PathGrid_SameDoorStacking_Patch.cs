@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -22,6 +24,9 @@ namespace DoorsExpanded
     internal static class PathGrid_SameDoorStacking_Patch
     {
         private const int DoorStackingCost = 45; // mirrors the literal in CalculatedCostAt
+        private const int CacheRefreshTicks = 60;
+
+        private static readonly ConditionalWeakTable<Map, SameDoorStackingCellCache> Caches = new();
 
         private static void Postfix(ref int __result, IntVec3 c, IntVec3 prevCell, PathGrid __instance)
         {
@@ -29,11 +34,65 @@ namespace DoorsExpanded
                 return;
 
             var map = __instance.map;
+            if (map == null)
+                return;
+
+            var cache = Caches.GetValue(map, static currentMap => new SameDoorStackingCellCache(currentMap));
+            if (!cache.ContainsBoth(c, prevCell))
+                return;
+
             if (c.GetEdifice(map) is Building_Door door
                 && ReferenceEquals(prevCell.GetEdifice(map), door)
                 && !door.FreePassage)
             {
                 __result -= DoorStackingCost;
+            }
+        }
+
+        private sealed class SameDoorStackingCellCache
+        {
+            private readonly Map map;
+            private readonly HashSet<IntVec3> cells = new();
+            private int nextRefreshTick = -1;
+
+            public SameDoorStackingCellCache(Map map)
+            {
+                this.map = map;
+            }
+
+            public bool ContainsBoth(IntVec3 first, IntVec3 second)
+            {
+                RefreshIfNeeded();
+                return cells.Contains(first) && cells.Contains(second);
+            }
+
+            private void RefreshIfNeeded()
+            {
+                var ticks = Find.TickManager?.TicksGame ?? 0;
+                if (ticks < nextRefreshTick)
+                    return;
+
+                nextRefreshTick = ticks + CacheRefreshTicks;
+                cells.Clear();
+                AddDoorCells(map.listerBuildings.allBuildingsColonist);
+                AddDoorCells(map.listerBuildings.allBuildingsNonColonist);
+            }
+
+            private void AddDoorCells(List<Building> buildings)
+            {
+                for (var i = 0; i < buildings.Count; i++)
+                {
+                    if (buildings[i] is not Building_Door door
+                        || !door.Spawned
+                        || door.FreePassage
+                        || door.def.Size.x * door.def.Size.z <= 1)
+                    {
+                        continue;
+                    }
+
+                    foreach (var cell in GenAdj.CellsOccupiedBy(door))
+                        cells.Add(cell);
+                }
             }
         }
     }
