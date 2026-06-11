@@ -6,7 +6,7 @@
   <supportedVersions>
     <li>1.6</li>
   </supportedVersions>
-  <description>Ground-up RimWorld 1.6 rewrite of Doors Expanded focused on vanilla multi-tile doors first, then custom animations, frames, and remote control. Reuses MIT-licensed Doors Expanded assets with attribution.</description>
+  <description>Ground-up rewrite of Doors Expanded focused on performance improvements, bug fixes and QoL enhancements.</description>
   <modVersion>0.1.0</modVersion>
   <url>https://github.com/CheaterEater-RM/DECO</url>
 

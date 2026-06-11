@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+  <!-- Carried over from the original Doors Expanded translation. Only keys whose English
+       meaning is unchanged in DECO are kept; reworded UI strings fall back to English. -->
+  <PH_RemoteDoorSecuredRemotely>远程安全防护</PH_RemoteDoorSecuredRemotely>
+  <PH_UseButtonOrLever>使用 {0}</PH_UseButtonOrLever>
+
+</LanguageData>
