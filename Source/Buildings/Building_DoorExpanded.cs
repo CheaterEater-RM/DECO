@@ -18,6 +18,9 @@ namespace DoorsExpanded
     public class Building_DoorExpanded : Building_MultiTileDoor
     {
         private CompProperties_DoorExpanded propsInt;
+        private Graphic doorAsyncGraphicInt;
+        private Graphic doorFrameGraphicInt;
+        private Graphic doorFrameSplitGraphicInt;
         private static bool suppressPairDoorOpen;
         private static bool suppressPairForbid;
 
@@ -35,12 +38,29 @@ namespace DoorsExpanded
         private static bool SyncPairedAsymmetricDoors =>
             DecoMod.Settings?.syncPairedAsymmetricDoors ?? true;
 
+        private Graphic DoorAsyncGraphic =>
+            doorAsyncGraphicInt ??= Props.doorAsync?.GraphicColoredFor(this);
+
+        private Graphic DoorFrameGraphic =>
+            doorFrameGraphicInt ??= Props.doorFrame?.GraphicColoredFor(this);
+
+        private Graphic DoorFrameSplitGraphic =>
+            doorFrameSplitGraphicInt ??= Props.doorFrameSplit?.GraphicColoredFor(this);
+
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
             // Non-1x1 rotations change the footprint, which base.SpawnSetup caches in
             // various ways, so the rotation must be corrected before calling base.
             Rotation = DoorRotationAt(def, Props, Position, Rotation, map);
             base.SpawnSetup(map, respawningAfterLoad);
+        }
+
+        public override void Notify_ColorChanged()
+        {
+            doorAsyncGraphicInt = null;
+            doorFrameGraphicInt = null;
+            doorFrameSplitGraphicInt = null;
+            base.Notify_ColorChanged();
         }
 
         // Ported from the original: auto-rotate non-rotatable 1x1 and stretch doors to face
@@ -87,6 +107,19 @@ namespace DoorsExpanded
                    || HasWallSide(rect, map, positiveSide, includeUnbuilt);
         }
 
+        internal bool StuckOpenBySupport()
+        {
+            var props = Props;
+            if (props.doorType == DoorType.FreePassage)
+                return true;
+            if (!Spawned || def.size == IntVec2.One)
+                return false;
+            if (props.oneSidedWallSupport)
+                return !HasOneSidedWallSupport(def, Position, Rotation, Map, includeUnbuilt: false);
+
+            return !HasFullWallSupport(def, Position, Rotation, Map, includeUnbuilt: false);
+        }
+
         protected override void DrawAt(Vector3 drawLoc, bool flip = false)
         {
             // We deliberately do NOT call base.DrawAt: Building_MultiTileDoor.DrawAt would
@@ -95,20 +128,27 @@ namespace DoorsExpanded
             // the optional frame overlays, then comp post-draw. DECO doors don't use
             // doorSupportGraphic/doorTopGraphic, so the Building_SupportedDoor tail is skipped.
             var props = Props;
-            var rotation = DoorRotationAt(def, props, Position, Rotation, Map);
-            Rotation = rotation;
+            var rotation = Rotation;
+            if (!def.rotatable || !props.rotatesSouth)
+            {
+                rotation = DoorRotationAt(def, props, Position, rotation, Map);
+                Rotation = rotation;
+            }
             if (props.oneSidedWallSupport)
                 rotation = CanonicalParallelRotation(rotation);
             drawLoc.y = AltitudeLayer.DoorMoveable.AltitudeFor();
             var openPct = OpenPct;
-            var asymmetricFlipped = ShouldDrawAsymmetricFlipped(rotation);
+            var baseGraphic = Graphic;
+            var asymmetricFlipped = props.asymmetric
+                && props.singleDoor
+                && ShouldDrawAsymmetricFlipped(rotation);
 
             for (var i = 0; i < 2; i++)
             {
                 var flipped = props.singleDoor ? asymmetricFlipped : i != 0;
                 var graphic = (!flipped && props.doorAsync != null)
-                    ? props.doorAsync.GraphicColoredFor(this)
-                    : Graphic;
+                    ? DoorAsyncGraphic
+                    : baseGraphic;
                 Draw(def, props, graphic, drawLoc, rotation, openPct, flipped);
                 graphic.ShadowGraphic?.DrawWorker(drawLoc, rotation, def, this, 0f);
                 if (props.singleDoor)
@@ -119,13 +159,13 @@ namespace DoorsExpanded
             {
                 DrawFrameParams(def, props, props.doorFrame, props.doorFrameOffset,
                     drawLoc, rotation, false, out var fMesh, out var fMatrix);
-                Graphics.DrawMesh(fMesh, fMatrix, props.doorFrame.GraphicColoredFor(this).MatAt(rotation, null), 0);
+                Graphics.DrawMesh(fMesh, fMatrix, DoorFrameGraphic.MatAt(rotation, null), 0);
 
                 if (props.doorFrameSplit != null)
                 {
                     DrawFrameParams(def, props, props.doorFrameSplit, props.doorFrameSplitOffset,
                         drawLoc, rotation, true, out fMesh, out fMatrix);
-                    Graphics.DrawMesh(fMesh, fMatrix, props.doorFrameSplit.GraphicColoredFor(this).MatAt(rotation, null), 0);
+                    Graphics.DrawMesh(fMesh, fMatrix, DoorFrameSplitGraphic.MatAt(rotation, null), 0);
                 }
             }
 
@@ -155,7 +195,8 @@ namespace DoorsExpanded
         protected override void Tick()
         {
             base.Tick();
-            ReconcileAsymmetricPair();
+            if (ShouldReconcileAsymmetricPair())
+                ReconcileAsymmetricPair();
         }
 
         public override IEnumerable<Gizmo> GetGizmos()
@@ -219,6 +260,15 @@ namespace DoorsExpanded
             };
         }
 
+        private bool ShouldReconcileAsymmetricPair()
+        {
+            var props = Props;
+            return SyncPairedAsymmetricDoors
+                   && props.asymmetric
+                   && props.syncAdjacentAsymmetricPair
+                   && (Open || holdOpenInt || ticksUntilClose > 0);
+        }
+
         private void ReconcileAsymmetricPair()
         {
             if (!SyncPairedAsymmetricDoors || !TryGetAdjacentAsymmetricPair(this, out var partner))
@@ -276,7 +326,8 @@ namespace DoorsExpanded
 
         private bool ShouldDrawAsymmetricFlipped(Rot4 rotation)
         {
-            if (!Props.asymmetric || !Props.singleDoor || !Spawned)
+            var props = Props;
+            if (!props.asymmetric || !props.singleDoor || !Spawned)
                 return false;
 
             GetLocalSideDirections(rotation, out _, out var positiveSide);
@@ -290,15 +341,17 @@ namespace DoorsExpanded
             out Building_DoorExpanded partner)
         {
             partner = null;
+            var props = door?.Props;
             if (door == null
                 || !door.Spawned
-                || !door.Props.asymmetric
-                || !door.Props.syncAdjacentAsymmetricPair)
+                || props == null
+                || !props.asymmetric
+                || !props.syncAdjacentAsymmetricPair)
             {
                 return false;
             }
 
-            var rotation = DoorRotationAt(door.def, door.Props, door.Position, door.Rotation, door.Map);
+            var rotation = DoorRotationAt(door.def, props, door.Position, door.Rotation, door.Map);
             if (!TryGetUniqueWallSide(door, rotation, out var wallSide))
                 return false;
 
@@ -314,7 +367,8 @@ namespace DoorsExpanded
                 return false;
             }
 
-            var partnerRotation = DoorRotationAt(partner.def, partner.Props,
+            var partnerProps = partner.Props;
+            var partnerRotation = DoorRotationAt(partner.def, partnerProps,
                 partner.Position, partner.Rotation, partner.Map);
             if (CanonicalParallelRotation(partnerRotation) != CanonicalParallelRotation(rotation)
                 || !AreRectsAdjacentOnSide(door.OccupiedRect(), partner.OccupiedRect(), searchSide)
@@ -370,12 +424,68 @@ namespace DoorsExpanded
         private static bool HasWallSide(CellRect rect, Map map, IntVec3 direction,
             bool includeUnbuilt)
         {
-            foreach (var cell in SideCells(rect, direction))
+            if (direction == IntVec3.East)
             {
-                if (!cell.InBounds(map))
+                var x = rect.maxX + 1;
+                for (var z = rect.minZ; z <= rect.maxZ; z++)
+                {
+                    if (!HasWallCell(new IntVec3(x, 0, z), map, includeUnbuilt))
+                        return false;
+                }
+                return true;
+            }
+
+            if (direction == IntVec3.West)
+            {
+                var x = rect.minX - 1;
+                for (var z = rect.minZ; z <= rect.maxZ; z++)
+                {
+                    if (!HasWallCell(new IntVec3(x, 0, z), map, includeUnbuilt))
+                        return false;
+                }
+                return true;
+            }
+
+            if (direction == IntVec3.North)
+            {
+                var z = rect.maxZ + 1;
+                for (var x = rect.minX; x <= rect.maxX; x++)
+                {
+                    if (!HasWallCell(new IntVec3(x, 0, z), map, includeUnbuilt))
+                        return false;
+                }
+                return true;
+            }
+
+            var southZ = rect.minZ - 1;
+            for (var x = rect.minX; x <= rect.maxX; x++)
+            {
+                if (!HasWallCell(new IntVec3(x, 0, southZ), map, includeUnbuilt))
+                    return false;
+            }
+
+            return true;
+        }
+
+        private static bool HasWallCell(IntVec3 cell, Map map, bool includeUnbuilt)
+        {
+            return cell.InBounds(map) && DoorUtility.EncapsulatingWallAt(cell, map, includeUnbuilt);
+        }
+
+        private static bool HasFullWallSupport(ThingDef def, IntVec3 loc, Rot4 rot, Map map,
+            bool includeUnbuilt)
+        {
+            var rect = GenAdj.OccupiedRect(IntVec3.Zero, def.defaultPlacingRot, def.size);
+            var max = def.defaultPlacingRot.IsHorizontal ? rect.Width : rect.Height;
+
+            for (var i = 0; i < max; i++)
+            {
+                var first = loc + new IntVec3(rect.minX - 1, 0, rect.minZ + i).RotatedBy(rot);
+                if (!HasWallCell(first, map, includeUnbuilt))
                     return false;
 
-                if (!DoorUtility.EncapsulatingWallAt(cell, map, includeUnbuilt))
+                var second = loc + new IntVec3(rect.maxX + 1, 0, rect.minZ + i).RotatedBy(rot);
+                if (!HasWallCell(second, map, includeUnbuilt))
                     return false;
             }
 
@@ -385,21 +495,63 @@ namespace DoorsExpanded
         private static Building_DoorExpanded DoorOnSide(Building_DoorExpanded door, IntVec3 direction)
         {
             Building_DoorExpanded found = null;
-            foreach (var cell in SideCells(door.OccupiedRect(), direction))
+            var rect = door.OccupiedRect();
+            var map = door.Map;
+
+            if (direction == IntVec3.East)
             {
-                if (!cell.InBounds(door.Map))
-                    return null;
+                var x = rect.maxX + 1;
+                for (var z = rect.minZ; z <= rect.maxZ; z++)
+                {
+                    if (!TryAddDoorOnSide(new IntVec3(x, 0, z), map, ref found))
+                        return null;
+                }
+                return found;
+            }
 
-                if (cell.GetEdifice(door.Map) is not Building_DoorExpanded candidate)
-                    return null;
+            if (direction == IntVec3.West)
+            {
+                var x = rect.minX - 1;
+                for (var z = rect.minZ; z <= rect.maxZ; z++)
+                {
+                    if (!TryAddDoorOnSide(new IntVec3(x, 0, z), map, ref found))
+                        return null;
+                }
+                return found;
+            }
 
-                if (found != null && found != candidate)
-                    return null;
+            if (direction == IntVec3.North)
+            {
+                var z = rect.maxZ + 1;
+                for (var x = rect.minX; x <= rect.maxX; x++)
+                {
+                    if (!TryAddDoorOnSide(new IntVec3(x, 0, z), map, ref found))
+                        return null;
+                }
+                return found;
+            }
 
-                found = candidate;
+            var southZ = rect.minZ - 1;
+            for (var x = rect.minX; x <= rect.maxX; x++)
+            {
+                if (!TryAddDoorOnSide(new IntVec3(x, 0, southZ), map, ref found))
+                    return null;
             }
 
             return found;
+        }
+
+        private static bool TryAddDoorOnSide(IntVec3 cell, Map map, ref Building_DoorExpanded found)
+        {
+            if (!cell.InBounds(map)
+                || cell.GetEdifice(map) is not Building_DoorExpanded candidate
+                || found != null && found != candidate)
+            {
+                return false;
+            }
+
+            found = candidate;
+            return true;
         }
 
         private static bool AreRectsAdjacentOnSide(CellRect source, CellRect other, IntVec3 direction)
@@ -420,31 +572,6 @@ namespace DoorsExpanded
             return source.minZ - 1 == other.maxZ
                    && source.minX == other.minX
                    && source.maxX == other.maxX;
-        }
-
-        private static IEnumerable<IntVec3> SideCells(CellRect rect, IntVec3 direction)
-        {
-            if (direction == IntVec3.East)
-            {
-                for (var z = rect.minZ; z <= rect.maxZ; z++)
-                    yield return new IntVec3(rect.maxX + 1, 0, z);
-                yield break;
-            }
-            if (direction == IntVec3.West)
-            {
-                for (var z = rect.minZ; z <= rect.maxZ; z++)
-                    yield return new IntVec3(rect.minX - 1, 0, z);
-                yield break;
-            }
-            if (direction == IntVec3.North)
-            {
-                for (var x = rect.minX; x <= rect.maxX; x++)
-                    yield return new IntVec3(x, 0, rect.maxZ + 1);
-                yield break;
-            }
-
-            for (var x = rect.minX; x <= rect.maxX; x++)
-                yield return new IntVec3(x, 0, rect.minZ - 1);
         }
 
         // Mirrors the original Draw(): pick per-type params, then draw one leaf.

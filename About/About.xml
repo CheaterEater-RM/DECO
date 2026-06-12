@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-  <name>Doors Expanded Continued Overhaul</name>
+  <name>DECO: Doors Expanded Continued Overhaul</name>
   <author>CheaterEater</author>
   <packageId>CheaterEater.DECO</packageId>
   <supportedVersions>
     <li>1.6</li>
   </supportedVersions>
-  <description>Ground-up rewrite of Doors Expanded focused on performance improvements, bug fixes and QoL enhancements.</description>
+  <description>Ground-up rewrite of Doors Expanded focused on bug fixes, QoL enhancements, maintainability and performance improvements.</description>
   <modVersion>0.1.0</modVersion>
   <url>https://github.com/CheaterEater-RM/DECO</url>
 
