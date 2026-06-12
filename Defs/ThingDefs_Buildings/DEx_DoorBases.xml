@@ -4,8 +4,9 @@
   <!--
   DECO door bases. These inherit from vanilla "DoorBase", so they get all vanilla
   door behaviour (state machine, pathing, regions, power, forbidding, temperature)
-  for free. M0 is pure XML on vanilla classes: 1x1 doors use Building_Door, wider
-  doors use Building_MultiTileDoor. No custom thingClass in M0.
+  for free. 1x1 doors stay on Building_Door unless they need DECO animation or
+  remote behavior; wider doors use the DECO Building_MultiTileDoor subclass for
+  full-width mover art while preserving vanilla door behavior.
   -->
 
   <!-- 1x1 door base. Building_Door. Inherits vanilla DoorBase wholesale. -->

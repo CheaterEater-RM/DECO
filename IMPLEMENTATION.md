@@ -2,17 +2,17 @@
 
 Working source snapshot: RimWorld `1.6.4850` decompiled source.
 
-This document is the implementation-side companion to `DoorsExpanded_Rewrite_DESIGN.md`. It records the vanilla code references DECO should lean on before adding custom code. The repo identity is DECO: package `CheaterEater.DECO`, Harmony ID `com.cheatereater.deco`, namespace and assembly `DECO`. If older planning text still says `CheaterEater.DoorsExpanded` or `DoorsExpanded`, treat that as provisional design-era text, not implementation identity.
+This document is the implementation-side companion to `DoorsExpanded_Rewrite_DESIGN.md`. It records the vanilla code references DECO should lean on before changing door behavior. The repo identity is DECO: package `CheaterEater.DECO`, Harmony ID `com.cheatereater.deco`, assembly `DECO`, and save-compatible C# namespace `DoorsExpanded`.
 
-## Milestone Shape
+## Implementation Shape
 
-M0 should stay pure XML:
+Vanilla-first catalogue:
 
 - 1x1 doors, jail doors, and simple curtains use `Building_Door`.
-- 2x1 and wider slide-animated doors, gates, and large curtains should try `Building_MultiTileDoor` first.
-- No C# is needed for vanilla sliding behavior, wall support checks, power, forbidding, pathing, reachability, temperature exchange, hold-open gizmos, or basic ghost/blueprint rendering.
+- 2x1 and wider doors build on `Building_MultiTileDoor` behavior through `Building_DoorExpanded`.
+- Vanilla still owns wall support checks, power, forbidding, pathing, reachability, temperature exchange, hold-open gizmos, and basic ghost/blueprint rendering wherever possible.
 
-M1 adds C# only for non-vanilla draw behavior:
+Scoped C#:
 
 - `Building_DoorExpanded : Building_MultiTileDoor`, draw-only where possible.
 - Config comp carries DECO draw data, but defs set `thingClass` explicitly.
@@ -23,10 +23,10 @@ M1 adds C# only for non-vanilla draw behavior:
 - Wide curtains also opt into one-sided wall support. They still require wall
   support, but do not require vanilla multi-tile door walls on both sides.
 
-M2 adds remote control:
+Remote control:
 
 - Remote state should override normal open permission, not replace vanilla door pathing.
-- Link state should be reference-scribed and scrubbed, following the pattern from the design doc.
+- Link state is reference-scribed and scrubbed, following the pattern from the design doc.
 
 ## Vanilla Door Model
 
@@ -70,7 +70,7 @@ RimWorld 1.6.4850 has two buildable vanilla-style `Building_MultiTileDoor` defs:
 - Core `OrnateDoor`, `ThingDefs_Buildings/Buildings_Structure.xml`
 - Anomaly `SecurityDoor`, `ThingDefs_Buildings/Buildings_Misc.xml`
 
-The Anomaly security door is the strongest M0 reference. It is a 2x1 multi-tile sliding door:
+The Anomaly security door is the strongest vanilla reference. It is a 2x1 multi-tile sliding door:
 
 ```xml
 <defName>SecurityDoor</defName>
@@ -107,7 +107,7 @@ Other notable `SecurityDoor` fields:
 
 `OrnateDoor` is also `Building_MultiTileDoor`, `size=(2, 1)`, `rotatable=true`, `isSupportDoor=true`, with `doorTopGraphic` and `doorSupportGraphic`, but no `upperMoverGraphic`.
 
-M0 XML guidance:
+XML guidance:
 
 - Use `<size>(N, 1)</size>` for wide doors, then rely on rotation for the other axis.
 - Add `rotatable>true</rotatable>` for all multi-tile doors.
@@ -175,8 +175,8 @@ Implementation implication: do not use `Blueprint_Door` for DECO multi-tile door
 
 Implementation implication:
 
-- For M0, prefer the vanilla `SecurityDoor` pattern: `useBlueprintGraphicAsGhost=true` and a closed-state `building.blueprintGraphicData`.
-- For M1 custom animated doors, first try a normal closed composite blueprint/ghost graphic. Ghosts and blueprints do not need to show open animation.
+- Prefer the vanilla `SecurityDoor` pattern: `useBlueprintGraphicAsGhost=true` and a closed-state `building.blueprintGraphicData`.
+- For custom animated doors, first try a normal closed composite blueprint/ghost graphic. Ghosts and blueprints do not need to show open animation.
 - If custom blueprint drawing is needed for DECO-only defs, set `<building><blueprintClass>DECO.Blueprint_DoorExpanded</blueprintClass></building>` on those defs. Vanilla blueprint generation already honors this; no global `Thing.DrawAt` patch is needed.
 - Avoid `GhostUtility` and `GhostDrawer` transpilers unless a later source check proves a scoped def/class solution cannot work.
 
@@ -220,7 +220,7 @@ Implementation implication:
 
 - There is a public overlay API for built-in overlay types only.
 - There is no public "draw this custom lock material as a pulsing overlay" API in 1.6.4850.
-- For M2, prefer either a DECO `DrawAt`/post-draw lock icon or an acceptable built-in overlay type. Avoid reflection into `OverlayDrawer.drawBatch` unless a later visual requirement makes it worth the fragility.
+- Prefer either a DECO `DrawAt`/post-draw lock icon or an acceptable built-in overlay type. Avoid reflection into `OverlayDrawer.drawBatch` unless a later visual requirement makes it worth the fragility.
 
 ## Rotation And Placement Controls
 
@@ -259,10 +259,3 @@ Implementation implication: if DECO later needs "cannot rotate south" behavior, 
 
 Current opt-in defs: `HeronCurtainTribal`, `HeronCurtainTribalDouble`,
 `HeronCurtainTribalTriple`, and `PH_DoorJail`.
-
-## Current Open Checks
-
-- Validate 3x1 `Building_MultiTileDoor` in-game. `DoorUtility` and `Building_MultiTileDoor.DrawMovers` look generic over `size.x`, but vanilla 1.6.4850 examples are 2x1.
-- Verify closed composite art for M1 custom doors before writing blueprint/ghost code.
-- Decide whether remote locked doors use a custom icon drawn by the door, or a built-in overlay type.
-- Update `DoorsExpanded_Rewrite_DESIGN.md` identity header when doing a docs pass, so it matches DECO instead of the old provisional names.

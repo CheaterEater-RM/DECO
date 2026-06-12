@@ -2,7 +2,7 @@
 
 Doors Expanded Continued Overhaul, or DECO, is a ground-up RimWorld 1.6 rewrite inspired by Doors Expanded.
 
-The first milestone is intentionally small: rebuild the slide-animated door catalogue in XML on top of vanilla door classes before adding any custom C# behavior. Later milestones add custom animations, decorative frames, and remote-control doors.
+DECO restores the Doors Expanded catalogue with wide doors, curtains, gates, jail and blast doors, remote-controlled garage doors, buttons, and levers. The implementation is built around vanilla door behavior first, with scoped C# only where the original visuals or remote-control behavior need it.
 
 ## Switching from / to the original Doors Expanded
 

@@ -14,7 +14,7 @@
     - curtains, large doors : none (start of game)
     - jail door, gate       : Smithing
     - blast doors           : Machining
-    - remote/garage doors   : Microelectronics  (M2 - not yet)
+    - remote controls/garage doors: Microelectronics
   -->
 
   <!-- ================= Large doors ================= -->
@@ -353,13 +353,12 @@
   </ThingDef>
 
   <!-- ================= Blast doors (Machining) ================= -->
-  <!-- Decorative frames/async leaves are a later milestone. These ship as sliding doors. -->
 
   <ThingDef ParentName="DExDoorBase">
     <defName>PH_DoorBlastSingle</defName>
     <label>blast door (1x1)</label>
     <description>A heavy door that is far more resilient to damage.</description>
-    <!-- Remote-class door (stub until M2), matching the original and old saves. Draws via
+    <!-- Remote-class door, matching the original and old saves. Draws via
          the expanded base: two mini leaves sliding inside the static frame housing. -->
     <thingClass>DoorsExpanded.Building_DoorRemote</thingClass>
     <size>(1,1)</size>
@@ -596,7 +595,7 @@
   </ThingDef>
 
   <!-- ================= Wide autodoors (Autodoors research) ================= -->
-  <!-- Remote-class doors (stub until M2), matching the original. -->
+  <!-- Remote-class doors, matching the original. -->
 
   <ThingDef ParentName="DExMultiDoorBase">
     <defName>PH_AutodoorDouble</defName>
