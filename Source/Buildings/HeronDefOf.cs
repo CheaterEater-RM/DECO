@@ -14,12 +14,8 @@ namespace DoorsExpanded
         public static ThingDef HeronCurtainTribalDouble;
         public static ThingDef HeronCurtainTribalTriple;
 
-        // Jail and blast doors get prisoner-lock / shoot-through behavior; referenced by
-        // PawnCanOpen_PrisonerLock_Patch and CombatExtendedCompat.
-        public static ThingDef PH_DoorJail;
-        public static ThingDef PH_DoorBlastSingle;
-        public static ThingDef PH_DoorBlastDoor;
-        public static ThingDef PH_DoorThickBlastDoor;
+        // Prisoner-lock / shoot-through behavior is no longer keyed off defNames here — doors opt in
+        // via DoorSecurityExtension (see PawnCanOpen_PrisonerLock_Patch and CombatExtendedCompat).
 
         static HeronDefOf()
         {

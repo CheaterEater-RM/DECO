@@ -244,6 +244,12 @@
 
   <ThingDef ParentName="DExDoorBase">
     <defName>PH_DoorJail</defName>
+    <modExtensions>
+      <li Class="DoorsExpanded.DoorSecurityExtension">
+        <prisonerLock>Jail</prisonerLock>
+        <barsShootThrough>true</barsShootThrough>
+      </li>
+    </modExtensions>
     <label>jail door</label>
     <description>A sliding jail cell door with strong bars.</description>
     <!-- Expanded class with the original's config (single panel, 0.8 travel) — also what
@@ -356,6 +362,11 @@
 
   <ThingDef ParentName="DExDoorBase">
     <defName>PH_DoorBlastSingle</defName>
+    <modExtensions>
+      <li Class="DoorsExpanded.DoorSecurityExtension">
+        <prisonerLock>Blast</prisonerLock>
+      </li>
+    </modExtensions>
     <label>blast door (1x1)</label>
     <description>A heavy door that is far more resilient to damage.</description>
     <!-- Remote-class door, matching the original and old saves. Draws via
@@ -430,6 +441,11 @@
 
   <ThingDef ParentName="DExMultiDoorBase">
     <defName>PH_DoorBlastDoor</defName>
+    <modExtensions>
+      <li Class="DoorsExpanded.DoorSecurityExtension">
+        <prisonerLock>Blast</prisonerLock>
+      </li>
+    </modExtensions>
     <label>blast door (2x1)</label>
     <description>A heavy pair of doors that are far more resilient to damage. Requires adjacent walls to function.</description>
     <thingClass>DoorsExpanded.Building_DoorRemote</thingClass>
@@ -513,6 +529,11 @@
 
   <ThingDef ParentName="DExMultiDoorBase">
     <defName>PH_DoorThickBlastDoor</defName>
+    <modExtensions>
+      <li Class="DoorsExpanded.DoorSecurityExtension">
+        <prisonerLock>Blast</prisonerLock>
+      </li>
+    </modExtensions>
     <label>blast door (3x2)</label>
     <description>An enormous, heavily reinforced pair of blast doors spanning a 3x2 area. Requires adjacent walls to function.</description>
     <thingClass>DoorsExpanded.Building_DoorRemote</thingClass>

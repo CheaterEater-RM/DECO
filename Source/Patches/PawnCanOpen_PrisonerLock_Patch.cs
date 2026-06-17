@@ -8,8 +8,9 @@ namespace DoorsExpanded
     //
     // Logic adapted from "Prisoners Don't Have Keys" by Mlie (MIT License, Copyright 2020 Mlie):
     //   https://github.com/emipa606/PrisonersDontHaveKeys
-    // The original postfixes Building_Door.PawnCanOpen; we do the same but gate on DECO's own
-    // jail/blast defs and our per-door-type settings, and never touch other doors.
+    // The original postfixes Building_Door.PawnCanOpen; we do the same but gate on the
+    // DoorSecurityExtension (carried by DECO's jail/blast defs and any opted-in reskin) and our
+    // per-door-type settings, and never touch other doors.
     // DECO is stricter than the original mod's OwnDoor setting: an escaping prisoner can only
     // open a DECO jail/blast door that actually borders their current prison cell.
     //
@@ -30,16 +31,13 @@ namespace DoorsExpanded
             if (settings == null)
                 return;
 
-            var def = __instance.def;
-            bool isJail = def == HeronDefOf.PH_DoorJail;
-            bool isBlast = def == HeronDefOf.PH_DoorBlastSingle
-                           || def == HeronDefOf.PH_DoorBlastDoor
-                           || def == HeronDefOf.PH_DoorThickBlastDoor;
-
-            if (!isJail && !isBlast)
+            var ext = __instance.def.GetModExtension<DoorSecurityExtension>();
+            if (ext == null || ext.prisonerLock == PrisonerLockKind.None)
                 return;
 
-            bool blocksPrisoners = isJail ? settings.jailBlocksPrisoners : settings.blastBlocksPrisoners;
+            bool blocksPrisoners = ext.prisonerLock == PrisonerLockKind.Jail
+                ? settings.jailBlocksPrisoners
+                : settings.blastBlocksPrisoners;
             if (!blocksPrisoners)
                 return;
 

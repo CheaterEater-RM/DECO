@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using RimWorld;
 using UnityEngine;
@@ -6,7 +7,7 @@ using Verse;
 
 namespace DoorsExpanded
 {
-    // Combat Extended compatibility for shoot-through jail "bars".
+    // Combat Extended compatibility for shoot-through door "bars" (DECO's jail and opted-in reskins).
     //
     // CE replaces vanilla cover/LOS: a building's fillPercent is treated as cover HEIGHT
     // (shots fly OVER low cover), so the vanilla fillPercent=0.25 jail door would just be a
@@ -24,6 +25,10 @@ namespace DoorsExpanded
     internal static class CombatExtendedCompat
     {
         private const float BarsBlockChance = 0.25f;
+
+        // Doors that intercept shots at any height — those marked DoorSecurityExtension.barsShootThrough.
+        // Built once at startup so the per-projectile-cell callback stays a single HashSet lookup.
+        private static HashSet<ThingDef> barsDoors;
 
         // Cached reflection handles into the loaded CE assembly.
         private static FieldInfo fiOriginIV3;
@@ -90,8 +95,28 @@ namespace DoorsExpanded
                 return;
             }
 
+            barsDoors = BuildBarsDoorSet();
+            if (barsDoors.Count == 0)
+            {
+                return;
+            }
+
             register.Invoke(null, new object[] { callback });
-            Log.Message("[DECO] Combat Extended detected; registered jail-bars shoot-through compat.");
+            Log.Message($"[DECO] Combat Extended detected; registered bars shoot-through compat for {barsDoors.Count} door def(s).");
+        }
+
+        // Defs flagged DoorSecurityExtension.barsShootThrough — DECO's jail plus any opted-in reskin.
+        private static HashSet<ThingDef> BuildBarsDoorSet()
+        {
+            var set = new HashSet<ThingDef>();
+            foreach (var td in DefDatabase<ThingDef>.AllDefsListForReading)
+            {
+                if (td.GetModExtension<DoorSecurityExtension>()?.barsShootThrough ?? false)
+                {
+                    set.Add(td);
+                }
+            }
+            return set;
         }
 
         // Signature must be assignable to Func<ProjectileCE, IntVec3, Thing, bool>; `object`
@@ -105,7 +130,7 @@ namespace DoorsExpanded
             }
 
             var door = cell.GetEdifice(map) as Building_Door;
-            if (door == null || door.def != HeronDefOf.PH_DoorJail || door.Open)
+            if (door == null || door.Open || !barsDoors.Contains(door.def))
             {
                 return false;
             }
