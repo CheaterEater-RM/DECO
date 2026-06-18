@@ -52,7 +52,7 @@
       <ComponentIndustrial>1</ComponentIndustrial>
     </costList>
     <graphicData>
-      <texPath>Things/Building/DEx/RemoteDoorButton/RemoteDoorButton_OFF</texPath>
+      <texPath>Things/Building/RemoteDoorButton/RemoteDoorButton_OFF</texPath>
       <graphicClass>Graphic_Multi</graphicClass>
       <drawSize>2</drawSize>
       <shadowData>
@@ -65,7 +65,7 @@
     <building>
       <isEdifice>false</isEdifice>
       <fullGraveGraphicData>
-        <texPath>Things/Building/DEx/RemoteDoorButton/RemoteDoorButton_ON</texPath>
+        <texPath>Things/Building/RemoteDoorButton/RemoteDoorButton_ON</texPath>
         <graphicClass>Graphic_Multi</graphicClass>
         <drawSize>2</drawSize>
         <shadowData>
@@ -92,7 +92,7 @@
       <ComponentIndustrial>1</ComponentIndustrial>
     </costList>
     <graphicData>
-      <texPath>Things/Building/DEx/RemoteDoorLever/RemoteDoorLever_OFF</texPath>
+      <texPath>Things/Building/RemoteDoorLever/RemoteDoorLever_OFF</texPath>
       <graphicClass>Graphic_Multi</graphicClass>
       <drawSize>2</drawSize>
       <shadowData>
@@ -105,7 +105,7 @@
     <building>
       <isEdifice>false</isEdifice>
       <fullGraveGraphicData>
-        <texPath>Things/Building/DEx/RemoteDoorLever/RemoteDoorLever_ON</texPath>
+        <texPath>Things/Building/RemoteDoorLever/RemoteDoorLever_ON</texPath>
         <graphicClass>Graphic_Multi</graphicClass>
         <drawSize>2</drawSize>
         <shadowData>
@@ -144,19 +144,19 @@
       <li>Metallic</li>
     </stuffCategories>
     <graphicData>
-      <texPath>Things/Building/DEx/Door/DoorRemote_Mover</texPath>
+      <texPath>Things/Building/Door/DoorRemote_Mover</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <drawSize>(1,1)</drawSize>
       <damageData>
         <enabled>false</enabled>
       </damageData>
     </graphicData>
-    <uiIconPath>Things/Building/DEx/Door/DoorRemote_Mover</uiIconPath>
+    <uiIconPath>Things/Building/Door/DoorRemote_Mover</uiIconPath>
     <building>
       <isStuffableAirtight>true</isStuffableAirtight>
       <blueprintClass>Blueprint_Build</blueprintClass>
       <blueprintGraphicData>
-        <texPath>Things/Building/DEx/Door/DoorRemote_Blueprint</texPath>
+        <texPath>Things/Building/Door/DoorRemote_Blueprint</texPath>
         <graphicClass>Graphic_Single</graphicClass>
         <drawSize>(1,1)</drawSize>
       </blueprintGraphicData>
@@ -206,18 +206,18 @@
       <li>Metallic</li>
     </stuffCategories>
     <graphicData>
-      <texPath>Things/Building/DEx/Door/DoorDoubleRemote_Mover</texPath>
+      <texPath>Things/Building/Door/DoorDoubleRemote_Mover</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <drawSize>(2,1)</drawSize>
       <damageData>
         <enabled>false</enabled>
       </damageData>
     </graphicData>
-    <uiIconPath>Things/Building/DEx/Door/DoorDoubleRemote_Mover</uiIconPath>
+    <uiIconPath>Things/Building/Door/DoorDoubleRemote_Mover</uiIconPath>
     <building>
       <isStuffableAirtight>true</isStuffableAirtight>
       <blueprintGraphicData>
-        <texPath>Things/Building/DEx/Door/DoorDoubleRemote_Blueprint</texPath>
+        <texPath>Things/Building/Door/DoorDoubleRemote_Blueprint</texPath>
         <graphicClass>Graphic_Single</graphicClass>
         <drawSize>(2,1)</drawSize>
       </blueprintGraphicData>
@@ -267,18 +267,18 @@
       <li>Metallic</li>
     </stuffCategories>
     <graphicData>
-      <texPath>Things/Building/DEx/Door/DoorTripleRemote_Mover</texPath>
+      <texPath>Things/Building/Door/DoorTripleRemote_Mover</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <drawSize>(3,1)</drawSize>
       <damageData>
         <enabled>false</enabled>
       </damageData>
     </graphicData>
-    <uiIconPath>Things/Building/DEx/Door/DoorTripleRemote_Mover</uiIconPath>
+    <uiIconPath>Things/Building/Door/DoorTripleRemote_Mover</uiIconPath>
     <building>
       <isStuffableAirtight>true</isStuffableAirtight>
       <blueprintGraphicData>
-        <texPath>Things/Building/DEx/Door/DoorTripleRemote_Blueprint</texPath>
+        <texPath>Things/Building/Door/DoorTripleRemote_Blueprint</texPath>
         <graphicClass>Graphic_Single</graphicClass>
         <drawSize>(3,1)</drawSize>
       </blueprintGraphicData>

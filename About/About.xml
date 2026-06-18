@@ -7,7 +7,7 @@
     <li>1.6</li>
   </supportedVersions>
   <description>Ground-up rewrite of Doors Expanded focused on bug fixes, QoL enhancements, maintainability and performance improvements.</description>
-  <modVersion>1.1</modVersion>
+  <modVersion>1.11</modVersion>
   <url>https://github.com/CheaterEater-RM/DECO</url>
 
   <modDependencies>
@@ -27,6 +27,14 @@
     <li>Ludeon.RimWorld.Anomaly</li>
     <li>Ludeon.RimWorld.Odyssey</li>
   </loadAfter>
+
+  <!-- DECO ships its door art at the original Doors Expanded texture paths, so path-based
+       retextures (e.g. [sbz] Doors Expanded retexture) work as drop-in replacements. Force
+       such retextures to load after DECO so their textures win the path override; the sbz mod
+       only declares loadAfter jecrell.doorsexpanded, which is never present alongside DECO. -->
+  <loadBefore>
+    <li>JGH.door</li>
+  </loadBefore>
 
   <!-- DECO owns the original Doors Expanded's internal names so saves swap freely between
        the two mods. Loading both at once duplicates those names and breaks. -->

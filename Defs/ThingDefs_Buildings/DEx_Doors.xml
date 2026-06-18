@@ -30,18 +30,18 @@
     </statBases>
     <costStuffCount>50</costStuffCount>
     <graphicData>
-      <texPath>Things/Building/DEx/Door/DoorDouble_Mover</texPath>
+      <texPath>Things/Building/Door/DoorDouble_Mover</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <drawSize>(2,1)</drawSize>
       <damageData>
         <enabled>false</enabled>
       </damageData>
     </graphicData>
-    <uiIconPath>Things/Building/DEx/Door/DoorDouble_MenuIcon</uiIconPath>
+    <uiIconPath>Things/Building/Door/DoorDouble_MenuIcon</uiIconPath>
     <building>
       <isStuffableAirtight>true</isStuffableAirtight>
       <blueprintGraphicData>
-        <texPath>Things/Building/DEx/Door/DoorDouble_Blueprint</texPath>
+        <texPath>Things/Building/Door/DoorDouble_Blueprint</texPath>
         <graphicClass>Graphic_Single</graphicClass>
         <drawSize>(2,1)</drawSize>
       </blueprintGraphicData>
@@ -64,18 +64,18 @@
     </statBases>
     <costStuffCount>75</costStuffCount>
     <graphicData>
-      <texPath>Things/Building/DEx/Door/DoorTriple_Mover</texPath>
+      <texPath>Things/Building/Door/DoorTriple_Mover</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <drawSize>(3,1)</drawSize>
       <damageData>
         <enabled>false</enabled>
       </damageData>
     </graphicData>
-    <uiIconPath>Things/Building/DEx/Door/DoorTriple_MenuIcon</uiIconPath>
+    <uiIconPath>Things/Building/Door/DoorTriple_MenuIcon</uiIconPath>
     <building>
       <isStuffableAirtight>true</isStuffableAirtight>
       <blueprintGraphicData>
-        <texPath>Things/Building/DEx/Door/DoorTriple_Blueprint</texPath>
+        <texPath>Things/Building/Door/DoorTriple_Blueprint</texPath>
         <graphicClass>Graphic_Single</graphicClass>
         <drawSize>(3,1)</drawSize>
       </blueprintGraphicData>
@@ -113,14 +113,14 @@
       <li>Leathery</li>
     </stuffCategories>
     <graphicData>
-      <texPath>Things/Building/DEx/Door/Curtain_Mover</texPath>
+      <texPath>Things/Building/Door/Curtain_Mover</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <drawSize>(1,1)</drawSize>
       <damageData>
         <enabled>false</enabled>
       </damageData>
     </graphicData>
-    <uiIconPath>Things/Building/DEx/Door/Curtain_Mover</uiIconPath>
+    <uiIconPath>Things/Building/Door/Curtain_Mover</uiIconPath>
     <building>
       <isStuffableAirtight>false</isStuffableAirtight>
       <roamerCanOpen>true</roamerCanOpen>
@@ -158,21 +158,21 @@
       <li>Leathery</li>
     </stuffCategories>
     <graphicData>
-      <texPath>Things/Building/DEx/Door/CurtainDouble_Mover</texPath>
+      <texPath>Things/Building/Door/CurtainDouble_Mover</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <drawSize>(2,1)</drawSize>
       <damageData>
         <enabled>false</enabled>
       </damageData>
     </graphicData>
-    <uiIconPath>Things/Building/DEx/Door/CurtainDouble_Mover</uiIconPath>
+    <uiIconPath>Things/Building/Door/CurtainDouble_Mover</uiIconPath>
     <building>
       <roamerCanOpen>true</roamerCanOpen>
       <soundDoorOpenManual>DEx_CurtainOpen</soundDoorOpenManual>
       <soundDoorCloseManual>DEx_CurtainClose</soundDoorCloseManual>
       <alwaysExchangeVacuum>true</alwaysExchangeVacuum>
       <blueprintGraphicData>
-        <texPath>Things/Building/DEx/Door/CurtainDouble_Mover</texPath>
+        <texPath>Things/Building/Door/CurtainDouble_Mover</texPath>
         <graphicClass>Graphic_Single</graphicClass>
         <drawSize>(2,1)</drawSize>
       </blueprintGraphicData>
@@ -209,21 +209,21 @@
       <li>Leathery</li>
     </stuffCategories>
     <graphicData>
-      <texPath>Things/Building/DEx/Door/CurtainTriple_Mover</texPath>
+      <texPath>Things/Building/Door/CurtainTriple_Mover</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <drawSize>(3,1)</drawSize>
       <damageData>
         <enabled>false</enabled>
       </damageData>
     </graphicData>
-    <uiIconPath>Things/Building/DEx/Door/CurtainTriple_Mover</uiIconPath>
+    <uiIconPath>Things/Building/Door/CurtainTriple_Mover</uiIconPath>
     <building>
       <roamerCanOpen>true</roamerCanOpen>
       <soundDoorOpenManual>DEx_CurtainOpen</soundDoorOpenManual>
       <soundDoorCloseManual>DEx_CurtainClose</soundDoorCloseManual>
       <alwaysExchangeVacuum>true</alwaysExchangeVacuum>
       <blueprintGraphicData>
-        <texPath>Things/Building/DEx/Door/CurtainTriple_Mover</texPath>
+        <texPath>Things/Building/Door/CurtainTriple_Mover</texPath>
         <graphicClass>Graphic_Single</graphicClass>
         <drawSize>(3,1)</drawSize>
       </blueprintGraphicData>
@@ -275,7 +275,7 @@
       <li>Metallic</li>
     </stuffCategories>
     <graphicData>
-      <texPath>Things/Building/DEx/Door/JailCell_Mover</texPath>
+      <texPath>Things/Building/Door/JailCell_Mover</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <shaderType>CutoutComplex</shaderType>
       <drawSize>(1,1)</drawSize>
@@ -283,7 +283,7 @@
         <enabled>false</enabled>
       </damageData>
     </graphicData>
-    <uiIconPath>Things/Building/DEx/Door/JailCell_Mover</uiIconPath>
+    <uiIconPath>Things/Building/Door/JailCell_Mover</uiIconPath>
     <building>
       <!-- Not airtight: bars let air and vacuum through (and isStuffableAirtight with
            non-Full Fillage is a vanilla ConfigError anyway). Near-instant temperature
@@ -294,7 +294,7 @@
       <doorTempEqualizeRate>1.0</doorTempEqualizeRate>
       <blueprintClass>Blueprint_Build</blueprintClass>
       <blueprintGraphicData>
-        <texPath>Things/Building/DEx/Door/JailCell_Blueprint</texPath>
+        <texPath>Things/Building/Door/JailCell_Blueprint</texPath>
         <graphicClass>Graphic_Single</graphicClass>
         <drawSize>(1,1)</drawSize>
       </blueprintGraphicData>
@@ -329,19 +329,19 @@
     </statBases>
     <costStuffCount>100</costStuffCount>
     <graphicData>
-      <texPath>Things/Building/DEx/Door/GateDoubleThick_Mover</texPath>
+      <texPath>Things/Building/Door/GateDoubleThick_Mover</texPath>
       <graphicClass>Graphic_Multi</graphicClass>
       <drawSize>(2,2)</drawSize>
       <damageData>
         <enabled>false</enabled>
       </damageData>
     </graphicData>
-    <uiIconPath>Things/Building/DEx/Door/Gate_MenuUI</uiIconPath>
+    <uiIconPath>Things/Building/Door/Gate_MenuUI</uiIconPath>
     <building>
       <isStuffableAirtight>false</isStuffableAirtight>
       <alwaysExchangeVacuum>true</alwaysExchangeVacuum>
       <blueprintGraphicData>
-        <texPath>Things/Building/DEx/Door/GateDoubleThick_Mover</texPath>
+        <texPath>Things/Building/Door/GateDoubleThick_Mover</texPath>
         <graphicClass>Graphic_Multi</graphicClass>
         <drawSize>(2,2)</drawSize>
       </blueprintGraphicData>
@@ -392,19 +392,19 @@
       <li>Metallic</li>
     </stuffCategories>
     <graphicData>
-      <texPath>Things/Building/DEx/Door/DoorBlastDoor_MoverSingle</texPath>
+      <texPath>Things/Building/Door/DoorBlastDoor_MoverSingle</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <drawSize>(1,1)</drawSize>
       <damageData>
         <enabled>false</enabled>
       </damageData>
     </graphicData>
-    <uiIconPath>Things/Building/DEx/Door/BlastDoorSingleUI</uiIconPath>
+    <uiIconPath>Things/Building/Door/BlastDoorSingleUI</uiIconPath>
     <building>
       <isStuffableAirtight>true</isStuffableAirtight>
       <blueprintClass>Blueprint_Build</blueprintClass>
       <blueprintGraphicData>
-        <texPath>Things/Building/DEx/Door/DoorBlastDoorSingle</texPath>
+        <texPath>Things/Building/Door/DoorBlastDoorSingle</texPath>
         <graphicClass>Graphic_Single</graphicClass>
         <drawSize>(1,1)</drawSize>
       </blueprintGraphicData>
@@ -420,7 +420,7 @@
         <rotatesSouth>false</rotatesSouth>
         <remoteDoor>true</remoteDoor>
         <doorFrame>
-          <texPath>Things/Building/DEx/Door/DoorBlastDoorSingle</texPath>
+          <texPath>Things/Building/Door/DoorBlastDoorSingle</texPath>
           <graphicClass>Graphic_Single</graphicClass>
           <shaderType>CutoutComplex</shaderType>
           <drawSize>(1,1)</drawSize>
@@ -467,20 +467,20 @@
       <li>Metallic</li>
     </stuffCategories>
     <graphicData>
-      <texPath>Things/Building/DEx/Door/DoorBlastDoor_Mover</texPath>
+      <texPath>Things/Building/Door/DoorBlastDoor_Mover</texPath>
       <graphicClass>Graphic_Multi</graphicClass>
       <drawSize>(2,1)</drawSize>
       <damageData>
         <enabled>false</enabled>
       </damageData>
     </graphicData>
-    <uiIconPath>Things/Building/DEx/Door/BlastDoorUI</uiIconPath>
+    <uiIconPath>Things/Building/Door/BlastDoorUI</uiIconPath>
     <building>
       <isStuffableAirtight>true</isStuffableAirtight>
       <soundDoorOpenManual>DEx_BlastDoorOpen</soundDoorOpenManual>
       <soundDoorCloseManual>DEx_BlastDoorClose</soundDoorCloseManual>
       <blueprintGraphicData>
-        <texPath>Things/Building/DEx/Door/DoorBlastDoor_Frame</texPath>
+        <texPath>Things/Building/Door/DoorBlastDoor_Frame</texPath>
         <graphicClass>Graphic_Multi</graphicClass>
         <drawSize>(2,1)</drawSize>
       </blueprintGraphicData>
@@ -495,20 +495,20 @@
         <rotatesSouth>false</rotatesSouth>
         <remoteDoor>true</remoteDoor>
         <doorAsync>
-          <texPath>Things/Building/DEx/Door/DoorBlastDoor_MoverAsync</texPath>
+          <texPath>Things/Building/Door/DoorBlastDoor_MoverAsync</texPath>
           <graphicClass>Graphic_Multi</graphicClass>
           <drawSize>(2,1)</drawSize>
           <damageData><enabled>false</enabled></damageData>
         </doorAsync>
         <doorFrame>
-          <texPath>Things/Building/DEx/Door/DoorBlastDoor_Frame</texPath>
+          <texPath>Things/Building/Door/DoorBlastDoor_Frame</texPath>
           <graphicClass>Graphic_Multi</graphicClass>
           <shaderType>CutoutComplex</shaderType>
           <drawSize>(2,1)</drawSize>
           <damageData><enabled>false</enabled></damageData>
         </doorFrame>
         <doorFrameSplit>
-          <texPath>Things/Building/DEx/Door/DoorBlastDoor_FrameAsync</texPath>
+          <texPath>Things/Building/Door/DoorBlastDoor_FrameAsync</texPath>
           <graphicClass>Graphic_Multi</graphicClass>
           <shaderType>CutoutComplex</shaderType>
           <drawSize>(2,1)</drawSize>
@@ -555,20 +555,20 @@
       <li>Metallic</li>
     </stuffCategories>
     <graphicData>
-      <texPath>Things/Building/DEx/Door/DoorBlastDoor_Mover</texPath>
+      <texPath>Things/Building/Door/DoorBlastDoor_Mover</texPath>
       <graphicClass>Graphic_Multi</graphicClass>
       <drawSize>(3,2)</drawSize>
       <damageData>
         <enabled>false</enabled>
       </damageData>
     </graphicData>
-    <uiIconPath>Things/Building/DEx/Door/BlastDoorUI</uiIconPath>
+    <uiIconPath>Things/Building/Door/BlastDoorUI</uiIconPath>
     <building>
       <isStuffableAirtight>true</isStuffableAirtight>
       <soundDoorOpenManual>DEx_BlastDoorOpen</soundDoorOpenManual>
       <soundDoorCloseManual>DEx_BlastDoorClose</soundDoorCloseManual>
       <blueprintGraphicData>
-        <texPath>Things/Building/DEx/Door/DoorBlastDoor_Frame</texPath>
+        <texPath>Things/Building/Door/DoorBlastDoor_Frame</texPath>
         <graphicClass>Graphic_Multi</graphicClass>
         <drawSize>(3,2)</drawSize>
       </blueprintGraphicData>
@@ -583,20 +583,20 @@
         <rotatesSouth>false</rotatesSouth>
         <remoteDoor>true</remoteDoor>
         <doorAsync>
-          <texPath>Things/Building/DEx/Door/DoorBlastDoor_MoverAsync</texPath>
+          <texPath>Things/Building/Door/DoorBlastDoor_MoverAsync</texPath>
           <graphicClass>Graphic_Multi</graphicClass>
           <drawSize>(3,2)</drawSize>
           <damageData><enabled>false</enabled></damageData>
         </doorAsync>
         <doorFrame>
-          <texPath>Things/Building/DEx/Door/DoorBlastDoor_Frame</texPath>
+          <texPath>Things/Building/Door/DoorBlastDoor_Frame</texPath>
           <graphicClass>Graphic_Multi</graphicClass>
           <shaderType>CutoutComplex</shaderType>
           <drawSize>(3,2)</drawSize>
           <damageData><enabled>false</enabled></damageData>
         </doorFrame>
         <doorFrameSplit>
-          <texPath>Things/Building/DEx/Door/DoorBlastDoor_FrameAsync</texPath>
+          <texPath>Things/Building/Door/DoorBlastDoor_FrameAsync</texPath>
           <graphicClass>Graphic_Multi</graphicClass>
           <shaderType>CutoutComplex</shaderType>
           <drawSize>(3,2)</drawSize>
@@ -635,18 +635,18 @@
     </costList>
     <costStuffCount>50</costStuffCount>
     <graphicData>
-      <texPath>Things/Building/DEx/Door/AutodoorDouble_Mover</texPath>
+      <texPath>Things/Building/Door/AutodoorDouble_Mover</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <drawSize>(2,1)</drawSize>
       <damageData>
         <enabled>false</enabled>
       </damageData>
     </graphicData>
-    <uiIconPath>Things/Building/DEx/Door/AutodoorDouble_MenuIcon</uiIconPath>
+    <uiIconPath>Things/Building/Door/AutodoorDouble_MenuIcon</uiIconPath>
     <building>
       <isStuffableAirtight>true</isStuffableAirtight>
       <blueprintGraphicData>
-        <texPath>Things/Building/DEx/Door/DoorDouble_Blueprint</texPath>
+        <texPath>Things/Building/Door/DoorDouble_Blueprint</texPath>
         <graphicClass>Graphic_Single</graphicClass>
         <drawSize>(2,1)</drawSize>
       </blueprintGraphicData>
@@ -685,18 +685,18 @@
     </costList>
     <costStuffCount>75</costStuffCount>
     <graphicData>
-      <texPath>Things/Building/DEx/Door/AutodoorTriple_Mover</texPath>
+      <texPath>Things/Building/Door/AutodoorTriple_Mover</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <drawSize>(3,1)</drawSize>
       <damageData>
         <enabled>false</enabled>
       </damageData>
     </graphicData>
-    <uiIconPath>Things/Building/DEx/Door/AutodoorTriple_MenuIcon</uiIconPath>
+    <uiIconPath>Things/Building/Door/AutodoorTriple_MenuIcon</uiIconPath>
     <building>
       <isStuffableAirtight>true</isStuffableAirtight>
       <blueprintGraphicData>
-        <texPath>Things/Building/DEx/Door/DoorTriple_Blueprint</texPath>
+        <texPath>Things/Building/Door/DoorTriple_Blueprint</texPath>
         <graphicClass>Graphic_Single</graphicClass>
         <drawSize>(3,1)</drawSize>
       </blueprintGraphicData>
